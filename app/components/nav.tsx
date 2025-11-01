@@ -10,11 +10,11 @@ const navItems = {
     "/arts": {
         name: "arts"
     },
-    "/community": {
-        name: "community"
-    },
     "/blog": {
         name: "blog"
+    },
+    "/contact": {
+        name: "contact"
     }
 };
 
