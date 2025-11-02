@@ -41,17 +41,18 @@ export default function Footer() {
                         <p className='ml-2 h-7'>github</p>
                     </a>
                 </li>
+                */}
                 <li>
                     <a
                         className='flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100'
                         rel='noopener noreferrer'
                         target='_blank'
-                        href='https://vercel.com/templates/next.js/portfolio-starter-kit'
+                        href='mailto:vincelapore@icloud.com'
                     >
                         <ArrowIcon />
-                        <p className='ml-2 h-7'>view source</p>
+                        <p className='ml-2 h-7'>email</p>
                     </a>
-                </li> */}
+                </li>
                 <li>
                     <a
                         className='flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100'
@@ -72,28 +73,6 @@ export default function Footer() {
                     >
                         <ArrowIcon />
                         <p className='ml-2 h-7'>eightysix.bar</p>
-                    </a>
-                </li>
-                <li>
-                    <a
-                        className='flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100'
-                        rel='noopener noreferrer'
-                        target='_blank'
-                        href='https://www.example.com'
-                    >
-                        <ArrowIcon />
-                        <p className='ml-2 h-7'>new music</p>
-                    </a>
-                </li>
-                <li>
-                    <a
-                        className='flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100'
-                        rel='noopener noreferrer'
-                        target='_blank'
-                        href='https://www.example.com'
-                    >
-                        <ArrowIcon />
-                        <p className='ml-2 h-7'>show</p>
                     </a>
                 </li>
             </ul>
