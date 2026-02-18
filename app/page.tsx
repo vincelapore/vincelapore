@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import LandingIntro from "./components/landing-intro";
 import FluidWebglBackground from "./components/fluid-webgl-background";
 
@@ -83,7 +84,11 @@ function AnimatedMenuItem({
         };
     }, [prevName, name]);
 
-    const renderContent = (displayName: string, mode: "in" | "out", baseDelayMs: number) => {
+    const renderContent = (
+        displayName: string,
+        mode: "in" | "out",
+        baseDelayMs: number
+    ) => {
         const chars = displayName.split("");
         const n = chars.length;
         const nameEndDelay = baseDelayMs + (n - 1) * 14;
@@ -100,9 +105,7 @@ function AnimatedMenuItem({
                 }
             >
                 {showNumbers && (
-                    <span className='landing__menu-num'>
-                        {num}
-                    </span>
+                    <span className='landing__menu-num'>{num}</span>
                 )}
                 <span className='landing__menu-label'>
                     <span className='landing__menu-name-swap'>
@@ -178,6 +181,22 @@ export default function Page() {
     const [activeItem, setActiveItem] = useState<string | null>(null);
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [wiggleWave, setWiggleWave] = useState(0);
+    const [showPrehistoricModal, setShowPrehistoricModal] = useState(false);
+
+    const prehistoricImages = [
+        { src: "/arts/prehistoric/image-1.png", alt: "Prehistoric rehearsal still 1" },
+        { src: "/arts/prehistoric/image-2.png", alt: "Prehistoric rehearsal still 2" },
+        { src: "/arts/prehistoric/image-4.png", alt: "Prehistoric rehearsal still 3" },
+        { src: "/arts/prehistoric/image-5.png", alt: "Prehistoric rehearsal still 4" },
+        { src: "/arts/prehistoric/image-6.png", alt: "Prehistoric rehearsal still 5" },
+        { src: "/arts/prehistoric/image-7.png", alt: "Prehistoric rehearsal still 6" },
+        { src: "/arts/prehistoric/image-8.png", alt: "Prehistoric rehearsal still 7" },
+        { src: "/arts/prehistoric/image-9.png", alt: "Prehistoric rehearsal still 8" },
+        { src: "/arts/prehistoric/image-10.png", alt: "Prehistoric rehearsal still 9" },
+        { src: "/arts/prehistoric/image-11.png", alt: "Prehistoric rehearsal still 10" },
+        { src: "/arts/prehistoric/image-12.png", alt: "Prehistoric rehearsal still 11" },
+        { src: "/arts/prehistoric/image-13.png", alt: "Prehistoric rehearsal still 12" }
+    ];
 
     const interactionItem = hoverItem ?? activeItem;
     const activeProject = projects.find(
@@ -191,14 +210,14 @@ export default function Page() {
     };
 
     const moreMenuBottomNameMap: Record<string, string> = {
-        "about": "me",
-        "contact": "email",
-        "wiggle": "yeah"
+        about: "me",
+        contact: "email",
+        wiggle: "yeah"
     };
 
     const getBottomName = () => {
         if (!activeProject) return "LAPORE";
-        
+
         if (showMoreMenu) {
             // Map project names to display names in more menu
             const displayNameMap: Record<string, string> = {
@@ -209,7 +228,7 @@ export default function Page() {
             const displayName = displayNameMap[activeProject.name];
             return moreMenuBottomNameMap[displayName] ?? "LAPORE";
         }
-        
+
         return bottomNameMap[activeProject.name] ?? "LAPORE";
     };
 
@@ -236,6 +255,18 @@ export default function Page() {
             document.documentElement.classList.remove("landing-scroll-lock");
         };
     }, []);
+
+    useEffect(() => {
+        if (showPrehistoricModal) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [showPrehistoricModal]);
 
     return (
         <section
@@ -288,6 +319,11 @@ export default function Page() {
 
                     const handleClick = () => {
                         if (!showMoreMenu) {
+                            // Handle prehistoric modal
+                            if (project.name === "prehistoric") {
+                                setShowPrehistoricModal(true);
+                                return;
+                            }
                             // Regular project links handled by href
                             return;
                         }
@@ -296,7 +332,8 @@ export default function Page() {
                         if (displayName === "wiggle") {
                             setWiggleWave((prev) => prev + 1);
                         } else if (displayName === "contact") {
-                            window.location.href = "mailto:hello@vincelapore.com";
+                            window.location.href =
+                                "mailto:hello@vincelapore.com";
                         } else if (displayName === "about") {
                             // Navigate to about page if it exists, or handle as needed
                             router.push("/about");
@@ -316,17 +353,69 @@ export default function Page() {
                                 href={showMoreMenu ? undefined : project.href}
                                 isAnchor={showMoreMenu ? false : !!project.href}
                                 handlers={{
-                                    onMouseEnter: () => setHoverItem(project.name),
+                                    onMouseEnter: () =>
+                                        setHoverItem(project.name),
                                     onMouseLeave: () => setHoverItem(null),
                                     onFocus: () => setActiveItem(project.name)
                                 }}
-                                onClick={showMoreMenu ? handleClick : undefined}
+                                onClick={
+                                    showMoreMenu
+                                        ? handleClick
+                                        : project.name === "prehistoric"
+                                          ? handleClick
+                                          : undefined
+                                }
                                 showNumbers={!showMoreMenu}
                             />
                         </div>
                     );
                 })}
             </nav>
+
+            {/* Prehistoric Modal */}
+            {showPrehistoricModal && (
+                <div
+                    className='landing__modal-overlay'
+                    onClick={() => setShowPrehistoricModal(false)}
+                >
+                    <div
+                        className='landing__modal-content'
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className='landing__modal-close'
+                            onClick={() => setShowPrehistoricModal(false)}
+                            aria-label='Close modal'
+                        >
+                            ×
+                        </button>
+                        <h2 className='landing__modal-title'>
+                            Prehistoric (2025)
+                        </h2>
+                        <p className='landing__modal-description'>
+                            As Pete. Held at PIP Theatre. A punk rock play set
+                            in 70s Brisbane. By Underground Theatre Company.
+                        </p>
+                        <div className='landing__modal-gallery'>
+                            {prehistoricImages.map((image, index) => (
+                                <div
+                                    key={index}
+                                    className='landing__modal-image-wrapper'
+                                >
+                                    <Image
+                                        src={image.src}
+                                        alt={image.alt}
+                                        width={600}
+                                        height={800}
+                                        className='landing__modal-image'
+                                        sizes='(max-width: 768px) 100vw, 50vw'
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }
