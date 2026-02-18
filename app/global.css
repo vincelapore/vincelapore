@@ -242,6 +242,14 @@ html {
     transform: translateY(calc(-50% + 26px));
 }
 
+@media (max-width: 900px) {
+    .landing:has(.landing__menu-link:hover) .landing__menu-bar,
+    .landing:has(.landing__menu-link:focus-visible) .landing__menu-bar,
+    .landing:has(.landing__menu-link:focus) .landing__menu-bar {
+        transform: translate(-50%, -50%) !important;
+    }
+}
+
 .landing__menu-item {
     display: flex;
     align-items: center;
@@ -605,36 +613,62 @@ html {
     }
 
     .landing__names {
-        position: relative;
-        inset: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+        position: absolute;
+        inset: 0;
+        display: block;
     }
 
-    .landing__name--top,
-    .landing__name--bottom {
-        position: static;
+    .landing__name--top {
+        position: absolute;
+        left: clamp(20px, 4vw, 32px);
+        top: clamp(20px, 4vw, 32px);
         font-size: clamp(3.1rem, 16vw, 6.8rem);
         text-align: left;
     }
 
     .landing__name--bottom {
-        margin-top: 0;
+        position: absolute;
+        right: clamp(20px, 4vw, 32px);
+        bottom: clamp(20px, 4vw, 32px);
+        font-size: clamp(3.1rem, 16vw, 6.8rem);
+        text-align: right;
         -webkit-text-stroke: 1.5px rgba(245, 245, 245, 0.75);
         text-stroke: 1.5px rgba(245, 245, 245, 0.75);
     }
 
     .landing__menu-bar {
-        position: relative;
-        left: auto;
-        top: auto;
-        transform: none;
+        position: fixed !important;
+        left: 50% !important;
+        right: auto !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        display: flex !important;
         flex-direction: column;
-        align-items: stretch;
-        width: 100%;
+        align-items: center;
+        justify-content: center;
+        width: auto;
         max-width: 320px;
-        margin: 0 auto;
+        padding: clamp(14px, 2vw, 24px);
+        z-index: 4;
+        margin: 0;
+        grid-template-columns: none;
+    }
+
+    .landing__menu-item {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .landing__menu-link,
+    .landing__menu-link-swap {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .landing__menu-content {
+        justify-content: center;
     }
 
     .landing__corners {
@@ -785,7 +819,6 @@ html {
     .landing__menu-bar {
         opacity: 1;
         animation: none;
-        transform: translateY(-50%);
     }
 
     .landing__overlay {
