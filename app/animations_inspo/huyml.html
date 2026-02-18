@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/Images/Favicon.png" />
+  <link rel="canonical" href="https://huyml.co">
+  <title>Huy Phan — Independent Designer from Vietnam</title>
+  <meta name="description"
+    content="Independent designer based in Vietnam. Focused on Website/Mobile and Interaction design.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Huy Phan — Independent Designer from Vietnam">
+  <meta name="twitter:description"
+    content="Independent designer based in Vietnam. Focused on Website/Mobile and Interaction design.">
+  <meta name="twitter:image" content="/Images/image-sharing.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://huyml.co">
+  <meta property="og:title" content="Huy Phan — Independent Designer from Vietnam">
+  <meta property="og:description"
+    content="Independent designer based in Vietnam. Focused on Website/Mobile and Interaction design.">
+  <meta property="og:image" content="/Images/image-sharing.jpg">
+  <meta property="og:image:type" content="image/jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="theme-color" content="#ebebeb">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EM3JMY7NKM%22%3E"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-EM3JMY7NKM');
+  </script>
+  <link rel=" stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/splitting/dist/splitting.css" />
+  <link rel="stylesheet" href="https://unpkg.com/splitting/dist/splitting-cells.css" />
+  <link rel="stylesheet" href="./css/vendor/locomotive.css" />
+</head>
+
+<body class="ol ol-mobile" data-barba="wrapper">
+  <div class="transition">
+    <div class="transition-group">
+      <span data-splitting class="transition-item active" id="home">
+        <div class="transition-item__inner">
+          <span class="font-Harmond">H</span>ome
+        </div>
+      </span>
+      <span data-splitting class="transition-item" id="work">
+        <div class="transition-item__inner">
+          <span class="font-Harmond">W</span>orks
+        </div>
+      </span>
+      <span data-splitting class="transition-item" id="about">
+        <div class="transition-item__inner">
+          <span class="font-Harmond">A</span>bout
+        </div>
+      </span>
+      <span data-splitting class="transition-item" id="playground">
+        <div class="transition-item__inner">
+          <span class="font-Harmond">P</span>layground
+        </div>
+      </span>
+      <span data-splitting class="transition-item" id="contact">
+        <div class="transition-item__inner">
+          <span class="font-Harmond">C</span>ontact
+        </div>
+      </span>
+      <span data-splitting class="transition-item" id="back-to-works">
+        <div class="transition-item__inner">
+          <span class="font-Harmond">L</span>eave
+        </div>
+      </span>
+      <span data-splitting class="transition-item" id="next-project">
+        <div class="transition-item__inner">
+          <span class="font-Harmond">N</span>ext project
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="loader">
+    <div id="progress"></div>
+  </div>
+  <header>
+    <nav class="nav container">
+      <div class="nav-logo">
+        <svg class="nav-logo__rotate colorMobile" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M11.9999 12L5.61501 20.2027C5.11281 20.7653 4.23154 20.7803 3.72078 20.2572C3.21795 19.7423 3.24334 18.879 3.79721 18.3849C6.53142 16.2566 9.26566 14.1283 11.9999 12Z"
+            fill="#1C1C1C" />
+          <path
+            d="M11.9999 11.9999L1.68496 13.2852C0.932055 13.3279 0.298262 12.7154 0.306974 11.9844C0.315539 11.2647 0.943908 10.6723 1.68496 10.7145C5.12328 11.143 8.56161 11.5714 11.9999 11.9999Z"
+            fill="#1C1C1C" />
+          <path
+            d="M11.9999 11.9999L3.79723 5.61501C3.23466 5.11281 3.21962 4.23154 3.74269 3.72078C4.25764 3.21795 5.12089 3.24334 5.61503 3.79721C7.74334 6.53142 9.87162 9.26566 11.9999 11.9999Z"
+            fill="#1C1C1C" />
+          <path
+            d="M11.9999 11.9999L10.7145 1.68496C10.6718 0.932055 11.2843 0.298262 12.0154 0.306974C12.735 0.315539 13.3275 0.943908 13.2852 1.68496C12.8568 5.12328 12.4283 8.56161 11.9999 11.9999Z"
+            fill="#1C1C1C" />
+          <path
+            d="M11.9999 12L18.3848 3.79735C18.887 3.23478 19.7682 3.21974 20.279 3.74282C20.7818 4.25776 20.7565 5.12102 20.2026 5.61515C17.4684 7.74346 14.7341 9.87174 11.9999 12Z"
+            fill="#1C1C1C" />
+          <path
+            d="M11.9999 11.9999L22.3149 10.7145C23.0678 10.6718 23.7016 11.2843 23.6929 12.0154C23.6843 12.735 23.056 13.3275 22.3149 13.2852C18.8766 12.8568 15.4382 12.4283 11.9999 11.9999Z"
+            fill="#1C1C1C" />
+          <path
+            d="M12 12L20.2027 18.3849C20.7653 18.8871 20.7803 19.7684 20.2572 20.2791C19.7423 20.782 18.879 20.7566 18.3849 20.2027C16.2566 17.4685 14.1283 14.7342 12 12Z"
+            fill="#1C1C1C" />
+          <path
+            d="M12 12L13.2853 22.315C13.328 23.0679 12.7155 23.7017 11.9845 23.693C11.2648 23.6845 10.6724 23.0561 10.7147 22.315C11.1431 18.8767 11.5715 15.4383 12 12Z"
+            fill="#1C1C1C" />
+        </svg>
+
+        <span class="nav-text nav-text__about">
+          <span>Open for any</span> <br />
+          <span> collaborations and offers </span>
+        </span>
+      </div>
+      <div class="nav-main menu-hover">
+        <a href="/home.html" class="menu__link" data-menu="home">
+          <svg class="logo-paths" width="115" height="25" viewBox="0 0 115 25" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M30.825 24.3291C36.5805 24.3291 40.3627 20.5526 40.3627 14.6417V1.01367H36.0872V14.6417C36.0872 17.9255 33.785 20.2242 30.825 20.2242C27.8651 20.2242 25.5629 17.9255 25.5629 14.6417V1.01367H21.2874V14.6417C21.2874 20.5526 25.0695 24.3291 30.825 24.3291Z"
+              fill="#1C1C1C" />
+            <path
+              d="M49.7269 24.0007H54.0025V16.1194L62.389 1.01367H57.6202L52.1936 10.8652H51.5358L46.1092 1.01367H41.3404L49.7269 16.1194V24.0007Z"
+              fill="#1C1C1C" />
+            <path
+              d="M63.544 24.0007H67.8195V8.07396H68.4773L73.9039 24.0007H78.5083L83.9349 8.07396H84.5927V24.0007H88.8682V1.01367H81.9616L76.535 17.1046H75.8772L70.4506 1.01367H63.544V24.0007Z"
+              fill="#1C1C1C" />
+            <path d="M92.4734 23.9911H107.566V19.888H96.7388V1.01367H92.4734V23.9911Z" fill="#1C1C1C" />
+            <path
+              d="M0 23.9911H4.27816V14.4719H14.6445V23.9911H18.9226V1.01367H14.6445V10.2047H4.27816V1.01367H0V23.9911Z"
+              fill="#1C1C1C" />
+            <path
+              d="M108.693 12.5025C112.322 12.5025 115 9.81095 115 6.25123C115 2.6915 112.322 0 108.693 0C105.064 0 102.385 2.6915 102.385 6.25123C102.385 9.81095 105.064 12.5025 108.693 12.5025ZM108.693 10.766C106.101 10.766 104.2 8.8559 104.2 6.25123C104.2 3.64655 106.101 1.73645 108.693 1.73645C111.285 1.73645 113.186 3.64655 113.186 6.25123C113.186 8.8559 111.285 10.766 108.693 10.766ZM108.779 9.46366C111.285 9.46366 111.803 6.94581 111.803 6.94581H110.075C110.075 6.94581 109.816 7.90086 108.779 7.90086C107.915 7.90086 107.31 7.2931 107.31 6.25123C107.31 5.20935 107.915 4.6016 108.779 4.6016C109.816 4.6016 110.075 5.46982 110.075 5.46982H111.803C111.803 5.46982 111.285 3.03879 108.779 3.03879C106.965 3.03879 105.582 4.42795 105.582 6.25123C105.582 8.0745 106.965 9.46366 108.779 9.46366Z"
+              fill="#1C1C1C" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="nav-version nav-version__about hide-on-mobile">
+        <span>Folio</span>
+        <span>Vol.1 <span>—</span></span>
+      </div>
+      <div class="nav-burger hide-on-desktop">
+        <button class="nav-burger__btn">
+          <span class="nav-burger__line nav-burger__about"> </span>
+          <span class="nav-burger__line nav-burger__about"> </span>
+        </button>
+      </div>
+    </nav>
+  </header>
+  <div class="container menu menu__abs hide-on-mobile">
+    <div class="menu__wrap">
+      <ul class="menu__inner menu-home">
+        <li class="menu__item menu-hover">
+          <a data-splitting data-menu="work" href="/works.html" class="menu__link">
+            <p class="menu__number">01</p>
+            <span class="menu__link-span">Works</span>
+            <span class="menu__link-span menu__link-clone">Works</span>
+          </a>
+        </li>
+        <li class="menu__item menu-hover">
+          <a data-splitting data-menu="about" href="/about.html" class="menu__link">
+            <p class="menu__number">02</p>
+            <span class="menu__link-span">About</span>
+            <span class="menu__link-span menu__link-clone">About</span>
+          </a>
+        </li>
+        <li class="menu__item menu-hover">
+          <a data-splitting data-menu="playground" href="/play-ground.html" class="menu__link">
+            <p class="menu__number">03</p>
+            <span class="menu__link-span">Playground</span>
+            <span class="menu__link-span menu__link-clone">Playground</span>
+          </a>
+        </li>
+        <li class="menu__item menu-hover">
+          <a data-splitting data-menu="contact" href="/contact.html" class="menu__link">
+            <p class="menu__number">04</p>
+            <span class="menu__link-span">Contact</span>
+            <span class="menu__link-span menu__link-clone">Contact</span>
+          </a>
+        </li>
+        <li class="menu__item">
+          <a href="#" class="menu__link">©2022</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div data-scroll-container class="home-prefix">
+    <main data-barba="container" data-barba-namespace="home">
+      <div data-scroll-section>
+        <div class="container">
+          <div class="wrapper">
+            <section class="hello">
+              <div class="hello-wrap">
+                <div class="hello-flex">
+                  <h1 data-splitting class="hello-title">
+                    <span class="font-sec"> Huy </span>
+                    <span>Phan</span>
+                  </h1>
+                  <p class="hello-sub">
+                    <span>(ML)</span>
+                  </p>
+                </div>
+              </div>
+            </section>
+            <section class="person">
+              <div class="person-wrap">
+                <div class="person-col2">
+                  <img src="/Images/Shapes.svg" alt="" class="person-circle" />
+                  <div class="person-text">
+                    Huy Phan (he/him) aka Huyml is an independent designer from ho chi minh city, Vietnam
+                  </div>
+                </div>
+                <div class="person-col4">
+                  <div id="lottie-home__clone"></div>
+                </div>
+                <div class="person-col2">
+                  <img src="/Images/Shapes.svg" alt="" class="person-circle" />
+                  <div class="person-text">
+                    passionate about creating unforgettable and beautiful
+                    digital experiences.
+                  </div>
+                </div>
+              </div>
+            </section>
+            <footer class="footer footer-clone">
+              <div class="container">
+                <div class="footer-flex">
+                  <p class="footer-content">Just an ordinary designer.</p>
+                  &nbsp;
+                  <p class="footer-content">From Vietnam with love.</p>
+                </div>
+              </div>
+            </footer>
+          </div>
+        </div>
+      </div>
+      <div class="preloader">
+        <div class="preloader-inner">
+          <div class="preloader-lotties">
+            <div id="lottie-loader"></div>
+            <div id="lottie-drop"></div>
+            <div id="lottie-home"></div>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <div class="container">
+            <div class="footer-flex">
+              <p class="footer-content">Just an ordinary designer.</p>
+              &nbsp;
+              <p class="footer-content">From Vietnam with love.</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <div class="menuMobile">
+    <div class="container">
+      <div class="menuMobile-wrap">
+        <ul class="menuMobile-list">
+          <li class="menuMobile-item menu-hover">
+            <a href="/works.html" class="menuMobile-link menu__link" data-splitting data-menu="work">
+              <span class="menuMobile-link__wrap">
+                <span class="menuMobile-link__number">01</span>
+                <span class="menuMobile-link__animate">
+                  <span class="font-Harmond">W</span>orks
+                </span>
+              </span>
+            </a>
+          </li>
+          <li class="menuMobile-item menu-hover">
+            <a href="/about.html" class="menuMobile-link menu__link" data-splitting data-menu="about">
+              <span class="menuMobile-link__wrap">
+                <span class="menuMobile-link__number">02</span>
+                <span class="menuMobile-link__animate">
+                  <span class="font-Harmond">A</span>bout
+                </span>
+              </span>
+            </a>
+          </li>
+          <li class="menuMobile-item menu-hover">
+            <a href="/play-ground.html" class="menuMobile-link menu__link" data-splitting data-menu="playground">
+              <span class="menuMobile-link__wrap">
+                <span class="menuMobile-link__number">03</span>
+                <span class="menuMobile-link__animate">
+                  <span class="font-Harmond">P</span>layground
+                </span>
+              </span>
+            </a>
+          </li>
+          <li class="menuMobile-item menu-hover">
+            <a href="/contact.html" class="menuMobile-link menu__link" data-splitting data-menu="contact">
+              <span class="menuMobile-link__wrap">
+                <span class="menuMobile-link__number">04</span>
+                <span class="menuMobile-link__animate">
+                  <span class="font-Harmond">C</span>ontact
+                </span>
+              </span>
+            </a>
+          </li>
+        </ul>
+        <div class="menuMobile-credit">
+          <div class="menuMobile-credit__inner">
+            <div class="menuMobile-col1">
+              <p class="menuMobile-text">CREDIT</p>
+            </div>
+            <div class="menuMobile-col1">
+              <div class="menuMobile-type">
+                <p class="menuMobile-grey">Development</p>
+                <p class="menuMobile-text">H.M.Chanh</p>
+              </div>
+              <div class="menuMobile-type">
+                <p class="menuMobile-grey">Illustration</p>
+                <p class="menuMobile-text">UI8</p>
+              </div>
+            </div>
+            <div class="menuMobile-col1">
+              <div class="menuMobile-type">
+                <p class="menuMobile-grey">Type</p>
+                <p class="menuMobile-text">Displaay</p>
+              </div>
+              <div class="menuMobile-type">
+                <p class="menuMobile-grey">Animation</p>
+                <p class="menuMobile-text">C+ Team</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="menuMobile-footer">
+          <p class="menuMobile-footer__text">Just an ordinary designer.</p>
+          &nbsp;
+          <p class="menuMobile-footer__text">From Vietnam with love.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/vendor/lazysizes.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="https://unpkg.com/@barba/core"></script>
+  <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.9.1/lottie.min.js"></script>
+  <script src="/js/index.js" type="module"></script>
+</body>
+
+</html>
