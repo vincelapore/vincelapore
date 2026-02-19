@@ -1,11 +1,16 @@
 import "./global.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { baseUrl } from "./sitemap";
 import LandingIntro from "./components/landing-intro";
+
+export const viewport: Viewport = {
+    themeColor: "#010302",
+    colorScheme: "dark"
+};
 
 export const metadata: Metadata = {
     metadataBase: new URL(baseUrl),
