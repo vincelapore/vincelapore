@@ -743,7 +743,8 @@ html {
     text-align: center;
     font-weight: 400;
     font-family:
-        Georgia, "Times New Roman", "Liberation Serif", Times, serif;
+        "Kode Mono", "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+        Consolas, "Liberation Mono", "Courier New", monospace;
     white-space: nowrap;
     line-height: 1;
     color: #1a1a1a;
