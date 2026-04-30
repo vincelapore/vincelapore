@@ -200,7 +200,7 @@ export default function LogoAnimation({ showHints }: { showHints: boolean }) {
     window.addEventListener("wheel", onWheel, { passive: false });
 
     function getBounds() {
-      const r = svg.getBoundingClientRect();
+      const r = svg!.getBoundingClientRect();
       const cx = window.innerWidth / 2;
       const cy = window.innerHeight / 2;
       const hw = r.width / 2;
