@@ -3,36 +3,17 @@
 import { useEffect, useState } from "react";
 import LogoAnimation from "./logo-animation";
 
-const backgrounds = [
-  {
-    src: "https://ktimyrrm7b44q4zu.public.blob.vercel-storage.com/backgrounds/cult.png",
-    color: "#3a3a3a",
-  },
-  {
-    src: "https://ktimyrrm7b44q4zu.public.blob.vercel-storage.com/backgrounds/noetica.png",
-    color: "#2a2a2a",
-  },
-  {
-    src: "https://ktimyrrm7b44q4zu.public.blob.vercel-storage.com/backgrounds/noetica-2.png",
-    color: "#1a1a1a",
-  },
-  {
-    src: "https://ktimyrrm7b44q4zu.public.blob.vercel-storage.com/backgrounds/yorick.png",
-    color: "#4a0a0a",
-  },
-  {
-    src: "https://ktimyrrm7b44q4zu.public.blob.vercel-storage.com/backgrounds/brandon.png",
-    color: "#1a0a1e",
-  },
-  {
-    src: "https://ktimyrrm7b44q4zu.public.blob.vercel-storage.com/backgrounds/sunlight.png",
-    color: "#d4737b",
-  },
-];
-
 export default function Home() {
   const [phase, setPhase] = useState<"logo" | "text" | "images">("logo");
   const [current, setCurrent] = useState(0);
+  const [backgrounds, setBackgrounds] = useState<{ src: string }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/backgrounds")
+      .then((res) => res.json())
+      .then((data) => setBackgrounds(data))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("text"), 2000);
@@ -44,12 +25,12 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (phase !== "images") return;
+    if (phase !== "images" || backgrounds.length === 0) return;
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % backgrounds.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, [phase]);
+  }, [phase, backgrounds.length]);
 
   const showLogo = phase === "logo" || phase === "text" || phase === "images";
   const showText = phase === "text" || phase === "images";
@@ -59,7 +40,7 @@ export default function Home() {
     <div
       className="relative flex flex-1 items-center justify-center overflow-hidden transition-colors duration-[1500ms] ease-in-out "
       style={{
-        backgroundColor: showImages ? backgrounds[current].color : "#ffffff",
+        backgroundColor: showImages ? "#1a1a1a" : "#ffffff",
       }}
     >
       {/* Background images */}
