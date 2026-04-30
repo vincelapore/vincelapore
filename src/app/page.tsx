@@ -9,7 +9,7 @@ export default function Home() {
   const [backgrounds, setBackgrounds] = useState<
     { src: string; color: string }[]
   >([]);
-  const loaded = useRef<Set<number>>(new Set());
+  const queue = useRef<number[]>([]);
 
   useEffect(() => {
     fetch("/api/backgrounds")
@@ -36,14 +36,35 @@ export default function Home() {
 
   useEffect(() => {
     if (phase !== "images" || backgrounds.length === 0) return;
+
+    function shuffle(exclude?: number) {
+      const indices = Array.from({ length: backgrounds.length }, (_, i) => i);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      // Avoid starting with the same image that just played
+      if (
+        exclude !== undefined &&
+        indices[0] === exclude &&
+        indices.length > 1
+      ) {
+        [indices[0], indices[indices.length - 1]] = [
+          indices[indices.length - 1],
+          indices[0],
+        ];
+      }
+      return indices;
+    }
+
+    queue.current = shuffle(current);
+
     const interval = setInterval(() => {
-      setCurrent((prev) => {
-        let next;
-        do {
-          next = Math.floor(Math.random() * backgrounds.length);
-        } while (next === prev && backgrounds.length > 1);
-        return next;
-      });
+      if (queue.current.length === 0) {
+        queue.current = shuffle(current);
+      }
+      const next = queue.current.shift()!;
+      setCurrent(next);
     }, 4000);
     return () => clearInterval(interval);
   }, [phase, backgrounds.length]);
@@ -62,14 +83,12 @@ export default function Home() {
             : "#ffffff",
       }}
     >
-      {/* Background images — only mount current + next to save bandwidth */}
+      {/* Background images — only mount current + upcoming to save bandwidth */}
       <div className="absolute inset-8">
         {backgrounds.map((bg, i) => {
-          const next = (current + 1) % backgrounds.length;
-          const shouldMount =
-            i === current || i === next || loaded.current.has(i);
+          const upcoming = queue.current[0];
+          const shouldMount = i === current || i === upcoming;
           if (!shouldMount) return null;
-          if (i === current || i === next) loaded.current.add(i);
           return (
             <div
               key={bg.src}
