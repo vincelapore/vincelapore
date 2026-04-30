@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LogoAnimation from "./logo-animation";
 
 export default function Home() {
@@ -9,6 +9,7 @@ export default function Home() {
   const [backgrounds, setBackgrounds] = useState<
     { src: string; color: string }[]
   >([]);
+  const loaded = useRef<Set<number>>(new Set());
 
   useEffect(() => {
     fetch("/api/backgrounds")
@@ -48,21 +49,28 @@ export default function Home() {
             : "#ffffff",
       }}
     >
-      {/* Background images */}
+      {/* Background images — only mount current + next to save bandwidth */}
       <div className="absolute inset-8">
-        {backgrounds.map((bg, i) => (
-          <div
-            key={bg.src}
-            className="absolute inset-0 transition-opacity duration-[1500ms] ease-in-out"
-            style={{
-              opacity: showImages && i === current ? 1 : 0,
-              backgroundImage: `url(${bg.src})`,
-              backgroundSize: "contain",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          />
-        ))}
+        {backgrounds.map((bg, i) => {
+          const next = (current + 1) % backgrounds.length;
+          const shouldMount =
+            i === current || i === next || loaded.current.has(i);
+          if (!shouldMount) return null;
+          if (i === current || i === next) loaded.current.add(i);
+          return (
+            <div
+              key={bg.src}
+              className="absolute inset-0 transition-opacity duration-[1500ms] ease-in-out"
+              style={{
+                opacity: showImages && i === current ? 1 : 0,
+                backgroundImage: `url(${bg.src})`,
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+          );
+        })}
       </div>
 
       {/* Grain overlay — always visible, adds texture */}
