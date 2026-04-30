@@ -1,3 +1,0 @@
-# Allow sharp (used by Next.js for image optimization) to run install scripts
-onlyBuiltDependencies:
-  - sharp
