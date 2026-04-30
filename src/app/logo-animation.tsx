@@ -176,17 +176,7 @@ export default function LogoAnimation({ showHints }: { showHints: boolean }) {
       }, 800);
     }
 
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      rotation += e.deltaY * 0.3;
-      gsap.to(svg, {
-        rotation,
-        duration: 0.4,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-      scheduleReset();
-
+    function dismissScrollHint() {
       if (!scrollDismissed.current && scrollHintRef.current) {
         scrollDismissed.current = true;
         gsap.to(scrollHintRef.current, {
@@ -196,8 +186,46 @@ export default function LogoAnimation({ showHints }: { showHints: boolean }) {
           ease: "power2.in",
         });
       }
+    }
+
+    function spinBy(delta: number) {
+      rotation += delta;
+      gsap.to(svg, {
+        rotation,
+        duration: 0.4,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+      scheduleReset();
+      dismissScrollHint();
+    }
+
+    // Desktop: wheel
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      spinBy(e.deltaY * 0.3);
     };
     window.addEventListener("wheel", onWheel, { passive: false });
+
+    // Mobile: touch-swipe anywhere outside the logo
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const onTouchStart = (e: TouchEvent) => {
+      if (svg.contains(e.target as Node)) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (svg.contains(e.target as Node)) return;
+      e.preventDefault();
+      const dx = e.touches[0].clientX - touchStartX;
+      const dy = e.touches[0].clientY - touchStartY;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      spinBy((dx + dy) * 0.5);
+    };
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
 
     function getBounds() {
       const r = svg!.getBoundingClientRect();
@@ -252,6 +280,8 @@ export default function LogoAnimation({ showHints }: { showHints: boolean }) {
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
       window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("resize", onResize);
       draggable.kill();
     };
@@ -290,7 +320,7 @@ export default function LogoAnimation({ showHints }: { showHints: boolean }) {
       </div>
 
       <div
-        className="fixed left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 mix-blend-difference pointer-events-none font-[family-name:var(--font-zalando-sans-expanded)] text-[1.4rem] text-white"
+        className="fixed left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 mix-blend-difference pointer-events-none font-[family-name:var(--font-zalando-sans-expanded)] text-[0.55rem] tracking-[0.15em] text-white"
         style={{ top: "calc(50% + 80px)", fontWeight: 300 }}
       >
         <span ref={dragHintRef} className="opacity-0">
