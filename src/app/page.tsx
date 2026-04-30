@@ -6,7 +6,9 @@ import LogoAnimation from "./logo-animation";
 export default function Home() {
   const [phase, setPhase] = useState<"logo" | "text" | "images">("logo");
   const [current, setCurrent] = useState(0);
-  const [backgrounds, setBackgrounds] = useState<{ src: string }[]>([]);
+  const [backgrounds, setBackgrounds] = useState<
+    { src: string; color: string }[]
+  >([]);
 
   useEffect(() => {
     fetch("/api/backgrounds")
@@ -40,7 +42,10 @@ export default function Home() {
     <div
       className="relative flex flex-1 items-center justify-center overflow-hidden transition-colors duration-[1500ms] ease-in-out "
       style={{
-        backgroundColor: showImages ? "#1a1a1a" : "#ffffff",
+        backgroundColor:
+          showImages && backgrounds[current]
+            ? backgrounds[current].color
+            : "#ffffff",
       }}
     >
       {/* Background images */}
