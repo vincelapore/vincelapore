@@ -14,7 +14,14 @@ export default function Home() {
   useEffect(() => {
     fetch("/api/backgrounds")
       .then((res) => res.json())
-      .then((data) => setBackgrounds(data))
+      .then((data: { src: string; color: string }[]) => {
+        // Shuffle so order is different each visit
+        for (let i = data.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [data[i], data[j]] = [data[j], data[i]];
+        }
+        setBackgrounds(data);
+      })
       .catch(() => {});
   }, []);
 
@@ -30,7 +37,13 @@ export default function Home() {
   useEffect(() => {
     if (phase !== "images" || backgrounds.length === 0) return;
     const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % backgrounds.length);
+      setCurrent((prev) => {
+        let next;
+        do {
+          next = Math.floor(Math.random() * backgrounds.length);
+        } while (next === prev && backgrounds.length > 1);
+        return next;
+      });
     }, 4000);
     return () => clearInterval(interval);
   }, [phase, backgrounds.length]);
