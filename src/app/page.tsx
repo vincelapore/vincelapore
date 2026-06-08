@@ -73,11 +73,11 @@ export default function Home() {
   }, [background]);
 
   const backgroundColor =
-    showImages && background ? background.color : "#ffffff";
+    showImages && background ? background.color : "#0a0a0a";
 
   return (
     <div
-      className="relative flex flex-1 items-center justify-center overflow-hidden transition-colors ease-in-out"
+      className="relative flex min-h-dvh flex-1 items-center justify-center overflow-hidden transition-colors ease-in-out"
       style={{ transitionDuration: `${FADE_MS}ms`, backgroundColor }}
     >
       {background && (
