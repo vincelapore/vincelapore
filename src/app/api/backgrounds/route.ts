@@ -2,7 +2,7 @@ import { list } from "@vercel/blob";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const { blobs } = await list({ prefix: "backgrounds/" });
+  const { blobs } = await list({ prefix: "boy-slaughter/" });
 
   const backgrounds = blobs
     .filter((b) => b.size > 0)

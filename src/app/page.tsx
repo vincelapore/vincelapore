@@ -3,24 +3,36 @@
 import { useEffect, useRef, useState } from "react";
 import LogoAnimation from "./logo-animation";
 
+type Bg = { src: string; color: string };
+
+const FADE_MS = 1500;
+
+function preload(src: string) {
+  return new Promise<void>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve();
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export default function Home() {
   const [phase, setPhase] = useState<"logo" | "text" | "images">("logo");
-  const [current, setCurrent] = useState(0);
-  const [backgrounds, setBackgrounds] = useState<
-    { src: string; color: string }[]
-  >([]);
-  const queue = useRef<number[]>([]);
+  const [background, setBackground] = useState<Bg | null>(null);
+  const [imageVisible, setImageVisible] = useState(false);
+
+  const showImagesRef = useRef(false);
 
   useEffect(() => {
     fetch("/api/backgrounds")
       .then((res) => res.json())
-      .then((data: { src: string; color: string }[]) => {
-        // Shuffle so order is different each visit
-        for (let i = data.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [data[i], data[j]] = [data[j], data[i]];
-        }
-        setBackgrounds(data);
+      .then((data: Bg[]) => {
+        if (data.length === 0) return;
+        setBackground(data[Math.floor(Math.random() * data.length)]);
       })
       .catch(() => {});
   }, []);
@@ -34,78 +46,61 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    if (phase !== "images" || backgrounds.length === 0) return;
-
-    function shuffle(exclude?: number) {
-      const indices = Array.from({ length: backgrounds.length }, (_, i) => i);
-      for (let i = indices.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [indices[i], indices[j]] = [indices[j], indices[i]];
-      }
-      // Avoid starting with the same image that just played
-      if (
-        exclude !== undefined &&
-        indices[0] === exclude &&
-        indices.length > 1
-      ) {
-        [indices[0], indices[indices.length - 1]] = [
-          indices[indices.length - 1],
-          indices[0],
-        ];
-      }
-      return indices;
-    }
-
-    queue.current = shuffle(current);
-
-    const interval = setInterval(() => {
-      if (queue.current.length === 0) {
-        queue.current = shuffle(current);
-      }
-      const next = queue.current.shift()!;
-      setCurrent(next);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [phase, backgrounds.length]);
-
-  const showLogo = phase === "logo" || phase === "text" || phase === "images";
   const showText = phase === "text" || phase === "images";
   const showImages = phase === "images";
+  showImagesRef.current = showImages;
+
+  useEffect(() => {
+    if (!background) return;
+
+    let cancelled = false;
+
+    (async () => {
+      await preload(background.src);
+      if (cancelled) return;
+
+      while (!showImagesRef.current && !cancelled) {
+        await sleep(50);
+      }
+      if (cancelled) return;
+
+      setImageVisible(true);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [background]);
+
+  const backgroundColor =
+    showImages && background ? background.color : "#ffffff";
 
   return (
     <div
-      className="relative flex flex-1 items-center justify-center overflow-hidden transition-colors duration-[1500ms] ease-in-out "
-      style={{
-        backgroundColor:
-          showImages && backgrounds[current]
-            ? backgrounds[current].color
-            : "#ffffff",
-      }}
+      className="relative flex flex-1 items-center justify-center overflow-hidden transition-colors ease-in-out"
+      style={{ transitionDuration: `${FADE_MS}ms`, backgroundColor }}
     >
-      {/* Background images — only mount current + upcoming to save bandwidth */}
-      <div className="absolute inset-8">
-        {backgrounds.map((bg, i) => {
-          const upcoming = queue.current[0];
-          const shouldMount = i === current || i === upcoming;
-          if (!shouldMount) return null;
-          return (
-            <div
-              key={bg.src}
-              className="absolute inset-0 transition-opacity duration-[1500ms] ease-in-out"
-              style={{
-                opacity: showImages && i === current ? 1 : 0,
-                backgroundImage: `url(${bg.src})`,
-                backgroundSize: "contain",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
-          );
-        })}
-      </div>
+      {background && (
+        <div className="absolute inset-0 z-0">
+          <img
+            src={background.src}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover transition-opacity ease-in-out"
+            style={{
+              transitionDuration: `${FADE_MS}ms`,
+              opacity: imageVisible ? 1 : 0,
+            }}
+          />
+          <div
+            className="absolute inset-0 bg-black/35 transition-opacity ease-in-out"
+            style={{
+              transitionDuration: `${FADE_MS}ms`,
+              opacity: imageVisible ? 1 : 0,
+            }}
+          />
+        </div>
+      )}
 
-      {/* Grain overlay — always visible, adds texture */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.08] mix-blend-overlay"
         style={{
@@ -115,20 +110,7 @@ export default function Home() {
         }}
       />
 
-      {/* Logo layer */}
-      <LogoAnimation showHints={showImages} />
-
-      {/* Text layer */}
-      <p
-        className="fixed top-1/2 left-1/2 mix-blend-difference whitespace-nowrap font-[family-name:var(--font-zalando-sans-expanded)] text-[1.4rem] text-white pointer-events-none transition-all duration-1000 ease-out"
-        style={{
-          fontWeight: 900,
-          opacity: showText ? 1 : 0,
-          transform: `translate(-50%, ${showText ? "-50%" : "calc(-50% + 10px)"})`,
-        }}
-      >
-        coming soon
-      </p>
+      <LogoAnimation showText={showText} showHints={showImages} />
     </div>
   );
 }

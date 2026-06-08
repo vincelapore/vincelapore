@@ -22,7 +22,90 @@ type AnimationType = "stroke-draw" | "blob-morph";
 
 const ANIMATIONS: AnimationType[] = ["stroke-draw", "blob-morph"];
 
-export default function LogoAnimation({ showHints }: { showHints: boolean }) {
+const CURRENT_SHOW = {
+  title: "boy slaughter",
+  subtitle: "tickets",
+  href: "https://events.humanitix.com/maxine-mellor-double-bill",
+} as const;
+
+const UPCOMING_SHOWS = [
+  {
+    title: "tth monologue show",
+    subtitle: "tickets",
+    href: "https://www.eventbrite.com/e/things-that-happen-the-monologue-tickets-1989163974996",
+  },
+  {
+    title: "never closer",
+    subtitle: "coming soon",
+    href: "#",
+  },
+] as const;
+
+const ENTER_MS = 1000;
+const STAGGER_MS = 180;
+
+function ShowLink({
+  title,
+  subtitle,
+  href,
+  large,
+  upcoming,
+  showText,
+  staggerIndex,
+}: {
+  title: string;
+  subtitle: string;
+  href: string;
+  large?: boolean;
+  upcoming?: boolean;
+  showText: boolean;
+  staggerIndex: number;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`group flex flex-col items-center ease-out ${showText ? "pointer-events-auto" : "pointer-events-none"}`}
+      style={{
+        opacity: showText ? 1 : 0,
+        transform: showText ? "translateY(0)" : "translateY(10px)",
+        transitionProperty: "opacity, transform",
+        transitionDuration: `${ENTER_MS}ms`,
+        transitionDelay: showText ? `${staggerIndex * STAGGER_MS}ms` : "0ms",
+      }}
+    >
+      <span
+        className={`flex flex-col items-center gap-0.5 transition-[opacity,transform] duration-300 ease-out ${
+          upcoming
+            ? "opacity-45 group-hover:opacity-70"
+            : "opacity-100 group-hover:opacity-85"
+        } group-hover:-translate-y-px`}
+      >
+        <span
+          className={`whitespace-nowrap transition-[letter-spacing] duration-300 ease-out group-hover:tracking-[0.04em] ${large ? "text-[1.4rem]" : "text-[1.05rem]"}`}
+          style={{ fontWeight: 900 }}
+        >
+          {title}
+        </span>
+        <span
+          className={`tracking-[0.15em] transition-[letter-spacing,opacity] duration-300 ease-out group-hover:tracking-[0.22em] group-hover:opacity-100 opacity-90 ${large ? "text-[0.55rem]" : "text-[0.45rem]"}`}
+          style={{ fontWeight: 300 }}
+        >
+          {subtitle}
+        </span>
+      </span>
+    </a>
+  );
+}
+
+export default function LogoAnimation({
+  showText,
+  showHints,
+}: {
+  showText: boolean;
+  showHints: boolean;
+}) {
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const blurRef = useRef<SVGFEGaussianBlurElement>(null);
@@ -320,15 +403,38 @@ export default function LogoAnimation({ showHints }: { showHints: boolean }) {
       </div>
 
       <div
-        className="fixed left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 mix-blend-difference pointer-events-none font-[family-name:var(--font-zalando-sans-expanded)] text-[0.55rem] tracking-[0.15em] text-white"
+        className="fixed left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 mix-blend-difference pointer-events-none font-[family-name:var(--font-zalando-sans-expanded)] text-[0.55rem] text-white"
         style={{ top: "calc(50% + 80px)", fontWeight: 300 }}
       >
-        <span ref={dragHintRef} className="opacity-0">
+        {/* <span ref={dragHintRef} className="opacity-0 tracking-[0.15em]">
           drag me
         </span>
-        <span ref={scrollHintRef} className="opacity-0">
+        <span ref={scrollHintRef} className="opacity-0 tracking-[0.15em]">
           scroll
-        </span>
+        </span> */}
+        <div className="mt-3 flex flex-col items-center">
+          <ShowLink
+            title={CURRENT_SHOW.title}
+            subtitle={CURRENT_SHOW.subtitle}
+            href={CURRENT_SHOW.href}
+            large
+            showText={showText}
+            staggerIndex={0}
+          />
+          <div className="mt-10 flex flex-col items-center gap-4">
+            {UPCOMING_SHOWS.map((show, i) => (
+              <ShowLink
+                key={show.title}
+                title={show.title}
+                subtitle={show.subtitle}
+                href={show.href}
+                upcoming
+                showText={showText}
+                staggerIndex={i + 1}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );
