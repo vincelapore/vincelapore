@@ -22,42 +22,42 @@ type AnimationType = "stroke-draw" | "blob-morph";
 
 const ANIMATIONS: AnimationType[] = ["stroke-draw", "blob-morph"];
 
-const CURRENT_SHOW = {
-  title: "boy slaughter",
-  subtitle: "tickets",
-  href: "https://events.humanitix.com/maxine-mellor-double-bill",
-} as const;
-
-const UPCOMING_SHOWS = [
+const LINKS = [
   {
-    title: "tth monologue show",
-    subtitle: "tickets",
-    href: "https://www.eventbrite.com/e/things-that-happen-the-monologue-tickets-1989163974996",
+    title: "github",
+    subtitle: "code",
+    href: "https://github.com/vincelapore",
   },
   {
-    title: "never closer",
-    subtitle: "coming soon",
-    href: "#",
+    title: "linkedin",
+    subtitle: "connect",
+    href: "https://www.linkedin.com/in/vincelapore",
+  },
+  {
+    title: "grademate",
+    subtitle: "grademate.dev",
+    href: "https://www.grademate.dev",
+  },
+  {
+    title: "yorick",
+    subtitle: "yorick.live",
+    href: "https://www.yorick.live",
   },
 ] as const;
 
 const ENTER_MS = 1000;
 const STAGGER_MS = 180;
 
-function ShowLink({
+function SiteLink({
   title,
   subtitle,
   href,
-  large,
-  upcoming,
   showText,
   staggerIndex,
 }: {
   title: string;
   subtitle: string;
   href: string;
-  large?: boolean;
-  upcoming?: boolean;
   showText: boolean;
   staggerIndex: number;
 }) {
@@ -75,21 +75,15 @@ function ShowLink({
         transitionDelay: showText ? `${staggerIndex * STAGGER_MS}ms` : "0ms",
       }}
     >
-      <span
-        className={`flex flex-col items-center gap-0.5 transition-[opacity,transform] duration-300 ease-out ${
-          upcoming
-            ? "opacity-45 group-hover:opacity-70"
-            : "opacity-100 group-hover:opacity-85"
-        } group-hover:-translate-y-px`}
-      >
+      <span className="flex flex-col items-center gap-0.5 opacity-100 transition-[opacity,transform] duration-300 ease-out group-hover:opacity-85 group-hover:-translate-y-px">
         <span
-          className={`whitespace-nowrap transition-[letter-spacing] duration-300 ease-out group-hover:tracking-[0.04em] ${large ? "text-[1.4rem]" : "text-[1.05rem]"}`}
+          className="whitespace-nowrap text-[1.05rem] transition-[letter-spacing] duration-300 ease-out group-hover:tracking-[0.04em]"
           style={{ fontWeight: 900 }}
         >
           {title}
         </span>
         <span
-          className={`tracking-[0.15em] transition-[letter-spacing,opacity] duration-300 ease-out group-hover:tracking-[0.22em] group-hover:opacity-100 opacity-90 ${large ? "text-[0.55rem]" : "text-[0.45rem]"}`}
+          className="tracking-[0.15em] text-[0.45rem] opacity-90 transition-[letter-spacing,opacity] duration-300 ease-out group-hover:tracking-[0.22em] group-hover:opacity-100"
           style={{ fontWeight: 300 }}
         >
           {subtitle}
@@ -99,20 +93,10 @@ function ShowLink({
   );
 }
 
-export default function LogoAnimation({
-  showText,
-  showHints,
-}: {
-  showText: boolean;
-  showHints: boolean;
-}) {
+export default function LogoAnimation({ showText }: { showText: boolean }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const blurRef = useRef<SVGFEGaussianBlurElement>(null);
-  const dragHintRef = useRef<HTMLSpanElement>(null);
-  const scrollHintRef = useRef<HTMLSpanElement>(null);
-  const dragDismissed = useRef(false);
-  const scrollDismissed = useRef(false);
 
   useEffect(() => {
     const svg = svgRef.current;
@@ -202,36 +186,6 @@ export default function LogoAnimation({
     }
   }, []);
 
-  // Fade in hints when images start
-  useEffect(() => {
-    if (!showHints) return;
-    const dragHint = dragHintRef.current;
-    const scrollHint = scrollHintRef.current;
-    if (!dragHint || !scrollHint) return;
-    if (dragDismissed.current && scrollDismissed.current) return;
-
-    const tl = gsap.timeline();
-    if (!dragDismissed.current) {
-      tl.fromTo(
-        dragHint,
-        { opacity: 0, y: 6 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-      );
-    }
-    if (!scrollDismissed.current) {
-      tl.fromTo(
-        scrollHint,
-        { opacity: 0, y: 6 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-        "-=0.4",
-      );
-    }
-
-    return () => {
-      tl.kill();
-    };
-  }, [showHints]);
-
   // Scroll-spin + drag/flick
   useEffect(() => {
     const svg = svgRef.current;
@@ -259,18 +213,6 @@ export default function LogoAnimation({
       }, 800);
     }
 
-    function dismissScrollHint() {
-      if (!scrollDismissed.current && scrollHintRef.current) {
-        scrollDismissed.current = true;
-        gsap.to(scrollHintRef.current, {
-          opacity: 0,
-          y: -8,
-          duration: 0.4,
-          ease: "power2.in",
-        });
-      }
-    }
-
     function spinBy(delta: number) {
       rotation += delta;
       gsap.to(svg, {
@@ -280,7 +222,6 @@ export default function LogoAnimation({
         overwrite: "auto",
       });
       scheduleReset();
-      dismissScrollHint();
     }
 
     // Desktop: wheel
@@ -333,16 +274,6 @@ export default function LogoAnimation({
         clearTimeout(resetTimer);
         rotation += this.deltaX * 0.5;
         gsap.set(svg, { rotation });
-
-        if (!dragDismissed.current && dragHintRef.current) {
-          dragDismissed.current = true;
-          gsap.to(dragHintRef.current, {
-            opacity: 0,
-            y: -8,
-            duration: 0.4,
-            ease: "power2.in",
-          });
-        }
       },
       onThrowUpdate() {
         rotation += this.deltaX * 0.5;
@@ -406,34 +337,17 @@ export default function LogoAnimation({
         className="fixed left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 mix-blend-difference pointer-events-none font-[family-name:var(--font-zalando-sans-expanded)] text-[0.55rem] text-white"
         style={{ top: "calc(50% + 80px)", fontWeight: 300 }}
       >
-        {/* <span ref={dragHintRef} className="opacity-0 tracking-[0.15em]">
-          drag me
-        </span>
-        <span ref={scrollHintRef} className="opacity-0 tracking-[0.15em]">
-          scroll
-        </span> */}
-        <div className="mt-3 flex flex-col items-center">
-          <ShowLink
-            title={CURRENT_SHOW.title}
-            subtitle={CURRENT_SHOW.subtitle}
-            href={CURRENT_SHOW.href}
-            large
-            showText={showText}
-            staggerIndex={0}
-          />
-          <div className="mt-10 flex flex-col items-center gap-4">
-            {UPCOMING_SHOWS.map((show, i) => (
-              <ShowLink
-                key={show.title}
-                title={show.title}
-                subtitle={show.subtitle}
-                href={show.href}
-                upcoming
-                showText={showText}
-                staggerIndex={i + 1}
-              />
-            ))}
-          </div>
+        <div className="mt-3 flex flex-col items-center gap-4">
+          {LINKS.map((link, i) => (
+            <SiteLink
+              key={link.title}
+              title={link.title}
+              subtitle={link.subtitle}
+              href={link.href}
+              showText={showText}
+              staggerIndex={i}
+            />
+          ))}
         </div>
       </div>
     </>
