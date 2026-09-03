@@ -5,6 +5,7 @@ import { Header } from './header'
 import { Footer } from './footer'
 import { ThemeProvider } from 'next-themes'
 import { LogoNav } from '@/components/logo-nav'
+import { IntroLoader } from '@/components/intro-loader'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -85,15 +86,17 @@ export default function RootLayout({
           storageKey="theme"
           defaultTheme="system"
         >
-          <LogoNav>
-            <div className="flex min-h-screen w-full flex-col font-[family-name:var(--font-inter-tight)]">
-              <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-24">
-                <Header />
-                {children}
-                <Footer />
+          <IntroLoader>
+            <LogoNav>
+              <div className="flex min-h-screen w-full flex-col font-[family-name:var(--font-inter-tight)]">
+                <div className="relative mx-auto w-full max-w-screen-sm flex-1 px-4 pt-24">
+                  <Header />
+                  {children}
+                  <Footer />
+                </div>
               </div>
-            </div>
-          </LogoNav>
+            </LogoNav>
+          </IntroLoader>
         </ThemeProvider>
       </body>
     </html>

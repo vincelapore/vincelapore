@@ -69,13 +69,21 @@ function ThemeSwitch() {
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-zinc-100 px-0 py-4 dark:border-zinc-800">
-      <div className="flex items-center justify-between">
-        <a href="https://github.com/vincelapore" target="_blank" rel="noopener noreferrer">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-500">
           <TextLoop className="text-xs text-zinc-500">
             <span>© {new Date().getFullYear()} Vince Lapore.</span>
             <span>Junior Product Engineer.</span>
           </TextLoop>
-        </a>
+          <a
+            href="https://www.linkedin.com/in/vincelapore/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-zinc-800 dark:hover:text-zinc-300"
+          >
+            LinkedIn
+          </a>
+        </div>
         <div className="text-xs text-zinc-400">
           <ThemeSwitch />
         </div>

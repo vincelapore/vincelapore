@@ -2,18 +2,34 @@ type Project = {
   name: string
   description: string
   link: string
-  /** Path under /public, e.g. `/videos/grademate.mp4` */
-  video?: string
+  tags: string[]
+  /** Path under /public — used for both themes unless imageLight is set */
+  image?: string
+  /** Optional light-mode image; falls back to `image` */
+  imageLight?: string
+  /** Hover preview video (Blob URL + intrinsic pixel size) */
+  video?: HoverVideo
   id: string
 }
 
 type WorkExperience = {
   company: string
   title: string
-  start: string
-  end: string
-  link: string
+  start?: string
+  end?: string
+  link?: string
+  description?: string
+  highlights?: string[]
+  video?: HoverVideo
   id: string
+}
+
+export type HoverVideo = {
+  src: string
+  /** Intrinsic width of the compressed preview file */
+  width: number
+  /** Intrinsic height of the compressed preview file */
+  height: number
 }
 
 type BlogPost = {
@@ -28,13 +44,19 @@ type SocialLink = {
   link: string
 }
 
+const BLOB =
+  'https://ktimyrrm7b44q4zu.public.blob.vercel-storage.com/projects'
+
 export const PROJECTS: Project[] = [
   {
     name: 'Grademate',
     description:
       'Grade calculator SaaS — from database and billing to UI, grown through SEO and organic adoption.',
     link: 'https://grademate.dev',
-    video: '/videos/grademate.mp4',
+    tags: ['Next.js', 'Stripe API', 'Supabase', 'SEO'],
+    image: '/projects/grademate-dark.jpg',
+    imageLight: '/projects/grademate-light.jpg',
+    video: { src: `${BLOB}/grademate.mp4`, width: 720, height: 426 },
     id: 'project1',
   },
   {
@@ -42,15 +64,30 @@ export const PROJECTS: Project[] = [
     description:
       'Discovery and portfolio platform for actors, built for casting-ready personal brands.',
     link: 'https://yorick.live',
-    video: '/videos/yorick.mp4',
+    tags: ['Next.js', 'Supabase', 'Tailwind'],
+    image: '/projects/yorick-dark.jpg',
+    imageLight: '/projects/yorick-light.jpg',
+    video: { src: `${BLOB}/yorick.mp4`, width: 720, height: 424 },
     id: 'project2',
   },
   {
     name: 'eightysix.bar',
     description: 'Spec library SaaS for bar teams.',
     link: 'https://eightysix.bar',
-    video: '/videos/eightysix.mp4',
+    tags: ['Swift', 'Supabase', 'Stripe API'],
+    image: '/projects/eightysix-dark.jpg',
+    video: { src: `${BLOB}/eightysix.mp4`, width: 332, height: 720 },
     id: 'project3',
+  },
+  {
+    name: 'Nic Davidson',
+    description:
+      'Theatre artist portfolio — acting, directing, and playwriting, with a Sanity-backed catalogue of productions.',
+    link: 'https://nic-davidson.com',
+    tags: ['Next.js', 'Sanity', 'GSAP'],
+    image: '/projects/nic-davidson.jpg',
+    video: { src: `${BLOB}/nic-davidson.mp4`, width: 720, height: 426 },
+    id: 'project4',
   },
 ]
 
@@ -71,6 +108,19 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     link: 'https://vincelapore.com',
     id: 'work2',
   },
+  {
+    company: 'Anyday Group',
+    title: 'Cocktail Bartender',
+    description:
+      'People skills, flexibility, and focus across Central Restaurant (hatted), LOS, sAme sAme & Biànca.',
+    highlights: [
+      'Addressed challenging customers while maintaining hospitality',
+      'Learned extensive, evolving spirit and wine lists — memorising up to 100 classic and house cocktail recipes',
+      'Balanced academics, late-night hours, and long commutes with social commitments',
+    ],
+    video: { src: `${BLOB}/bartender.mp4`, width: 332, height: 720 },
+    id: 'work3',
+  },
 ]
 
 export const BLOG_POSTS: BlogPost[] = []
@@ -80,6 +130,10 @@ export const SOCIAL_LINKS: SocialLink[] = [
     label: 'Github',
     link: 'https://github.com/vincelapore',
   },
+  {
+    label: 'LinkedIn',
+    link: 'https://www.linkedin.com/in/vincelapore/',
+  },
 ]
 
-export const EMAIL = 'vmelapore@gmail.com'
+export const EMAIL = 'hello@vincelapore.com'
