@@ -1,12 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Zalando_Sans_Expanded } from "next/font/google";
+import "@fontsource-variable/zalando-sans-expanded/wght.css";
 import "./globals.css";
-
-const zalandoSansExpanded = Zalando_Sans_Expanded({
-  variable: "--font-zalando-sans-expanded",
-  weight: ["300", "900"],
-  subsets: ["latin"],
-});
 
 export const viewport: Viewport = {
   themeColor: "#0a0a0a",
@@ -28,10 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${zalandoSansExpanded.variable} h-full antialiased`}
-    >
+    <html lang="en" className="h-full antialiased">
       <body className="flex min-h-dvh flex-col">{children}</body>
     </html>
   );

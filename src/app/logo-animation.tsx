@@ -13,11 +13,6 @@ if (typeof window !== "undefined") {
 const LOGO_PATH =
   "M285.904 203.227L490.345 120.628L572.684 324.423L368.242 407.021L368.473 407.591L164.677 489.93L0 82.3389L203.796 0L285.904 203.227Z";
 
-const CENTER_X = 286;
-const CENTER_Y = 245;
-const DOT_R = 2;
-const DOT_PATH = `M${CENTER_X - DOT_R},${CENTER_Y} A${DOT_R},${DOT_R} 0 1,1 ${CENTER_X + DOT_R},${CENTER_Y} A${DOT_R},${DOT_R} 0 1,1 ${CENTER_X - DOT_R},${CENTER_Y}Z`;
-
 type AnimationType = "stroke-draw" | "blob-morph";
 
 const ANIMATIONS: AnimationType[] = ["stroke-draw", "blob-morph"];

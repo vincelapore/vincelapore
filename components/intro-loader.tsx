@@ -9,7 +9,6 @@ import {
 } from 'react'
 import gsap from 'gsap'
 import { LogoMark } from '@/components/logo-mark'
-import { getHoverVideoUrls, preloadVideos } from '@/lib/preload-videos'
 
 const SESSION_KEY = 'vl-intro-seen-v9'
 
@@ -54,10 +53,7 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
     if (ranRef.current) return
     ranRef.current = true
 
-    const urls = getHoverVideoUrls()
-
     if (prefersReducedMotion() || hasSeenIntro()) {
-      void preloadVideos(urls)
       setPhase('done')
       return
     }
@@ -76,8 +72,6 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
     const ince = inceRef.current
     const apore = aporeRef.current
     if (!overlay || !word || !mark || !first || !v || !ince || !apore) return
-
-    const videosReady = preloadVideos(getHoverVideoUrls())
 
     // Hide the "v" so only "ince" contributes width while we measure.
     gsap.set(v, {
@@ -163,14 +157,7 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
         )
         .to({}, { duration: 1 })
 
-      void intro.then(async () => {
-        await Promise.race([
-          videosReady,
-          new Promise<void>((resolve) => {
-            window.setTimeout(resolve, 2500)
-          }),
-        ])
-
+      void intro.then(() => {
         const exit = gsap.timeline({
           onComplete: () => {
             finished = true

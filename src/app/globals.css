@@ -3,6 +3,7 @@
 :root {
   --background: #0a0a0a;
   --foreground: #f5f5f5;
+  --font-zalando-sans-expanded: "Zalando Sans Expanded Variable", sans-serif;
 }
 
 @theme inline {

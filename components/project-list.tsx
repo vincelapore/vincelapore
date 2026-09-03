@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
-import { useHoverVideoPreview } from '@/components/hover-video-preview'
+import { HoverPreview } from '@/components/hover-preview'
 import { PROJECTS } from '@/app/data'
 
 function ProjectImage({
@@ -57,46 +57,46 @@ function ProjectImage({
 }
 
 export function ProjectList() {
-  const { showPreview, hidePreview, preview } = useHoverVideoPreview()
-
   return (
     <div>
       <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
         {PROJECTS.map((project) => (
-          <a
+          <HoverPreview
             key={project.id}
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block"
-            onMouseEnter={(event) => showPreview(project, event)}
-            onMouseLeave={hidePreview}
+            preview={project.preview}
+            label={`${project.name} preview`}
           >
-            <ProjectImage
-              src={project.image}
-              srcLight={project.imageLight}
-              alt={project.name}
-            />
-            <span className="font-base relative inline-block font-[450] text-zinc-900 dark:text-zinc-50">
-              {project.name}
-            </span>
-            <p className="mt-1 text-base text-zinc-600 dark:text-zinc-400">
-              {project.description}
-            </p>
-            <ul className="mt-3 flex flex-wrap gap-1.5">
-              {project.tags.map((tag) => (
-                <li
-                  key={tag}
-                  className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-                >
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          </a>
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group -mx-3 block rounded-md px-3 py-2 transition-colors duration-200 hover:bg-zinc-200/80 dark:hover:bg-zinc-800"
+            >
+              <ProjectImage
+                src={project.image}
+                srcLight={project.imageLight}
+                alt={project.name}
+              />
+              <span className="font-base relative inline-block font-[450] text-zinc-900 dark:text-zinc-50">
+                {project.name}
+              </span>
+              <p className="mt-1 text-base text-zinc-600 dark:text-zinc-400">
+                {project.description}
+              </p>
+              <ul className="mt-3 flex flex-wrap gap-1.5">
+                {project.tags.map((tag) => (
+                  <li
+                    key={tag}
+                    className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 transition-colors group-hover:bg-zinc-300/60 dark:bg-zinc-800 dark:text-zinc-400 dark:group-hover:bg-zinc-700"
+                  >
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            </a>
+          </HoverPreview>
         ))}
       </div>
-      {preview}
     </div>
   )
 }

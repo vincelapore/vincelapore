@@ -1,22 +1,28 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import {
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useRef,
+  useState,
+  type ReactElement,
+} from 'react'
 import { createPortal } from 'react-dom'
+import Image from 'next/image'
 import { AnimatePresence, motion, useMotionValue } from 'motion/react'
-import type { HoverVideo } from '@/app/data'
-import { ensureWarmedVideo, parkWarmedVideo } from '@/lib/preload-videos'
+import type { HoverPreview as HoverPreviewData } from '@/app/data'
 
-/** Longest side of the hover preview; aspect follows the video file. */
+/** Longest side of the hover preview; aspect follows the GIF. */
 const PREVIEW_MAX = 352
-/** Matches Floating UI offset(8) + bottom-start on omarabdulrahim.com */
 const OFFSET = 8
 const PAD = 8
 
-function getPreviewSize(videoWidth: number, videoHeight: number) {
-  const scale = PREVIEW_MAX / Math.max(videoWidth, videoHeight)
+function getPreviewSize(width: number, height: number) {
+  const scale = PREVIEW_MAX / Math.max(width, height)
   return {
-    width: Math.round(videoWidth * scale),
-    height: Math.round(videoHeight * scale),
+    width: Math.round(width * scale),
+    height: Math.round(height * scale),
   }
 }
 
@@ -47,21 +53,25 @@ function getPreviewPosition(
 }
 
 type ActivePreview = {
-  id: string
-  video: HoverVideo
   originX: number
   originY: number
   width: number
   height: number
 }
 
-export function useHoverVideoPreview() {
+type HoverPreviewProps = {
+  preview?: HoverPreviewData
+  label: string
+  children: ReactElement<{
+    onMouseEnter?: (event: React.MouseEvent) => void
+    onMouseLeave?: (event: React.MouseEvent) => void
+  }>
+}
+
+export function HoverPreview({ preview, label, children }: HoverPreviewProps) {
   const [active, setActive] = useState<ActivePreview | null>(null)
   const [mounted, setMounted] = useState(false)
-  const slotRef = useRef<HTMLDivElement>(null)
-  const activeVideoRef = useRef<HTMLVideoElement | null>(null)
   const sizeRef = useRef({ width: PREVIEW_MAX, height: PREVIEW_MAX })
-  const pointerRef = useRef({ x: 0, y: 0 })
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
@@ -73,9 +83,13 @@ export function useHoverVideoPreview() {
     if (!active) return
 
     const onMove = (event: MouseEvent) => {
-      pointerRef.current = { x: event.clientX, y: event.clientY }
       const { width, height } = sizeRef.current
-      const next = getPreviewPosition(event.clientX, event.clientY, width, height)
+      const next = getPreviewPosition(
+        event.clientX,
+        event.clientY,
+        width,
+        height,
+      )
       x.set(next.x)
       y.set(next.y)
     }
@@ -84,59 +98,13 @@ export function useHoverVideoPreview() {
     return () => window.removeEventListener('mousemove', onMove)
   }, [active, x, y])
 
-  // Move the already-buffered <video> into the preview — don't create a new one.
-  useLayoutEffect(() => {
-    if (!active) return
+  if (!preview) {
+    return children
+  }
 
-    const slot = slotRef.current
-    const warmed = ensureWarmedVideo(active.video.src)
-    if (!slot) return
-
-    warmed.className = 'block h-full w-full object-cover'
-    warmed.style.display = 'block'
-    warmed.style.width = '100%'
-    warmed.style.height = '100%'
-    warmed.style.objectFit = 'cover'
-    slot.replaceChildren(warmed)
-    activeVideoRef.current = warmed
-
-    const play = () => {
-      try {
-        warmed.currentTime = 0
-      } catch {
-        // ignore
-      }
-      void warmed.play().catch(() => {})
-    }
-
-    if (warmed.readyState >= 2) {
-      play()
-    } else {
-      warmed.addEventListener('loadeddata', play, { once: true })
-      warmed.addEventListener('canplay', play, { once: true })
-    }
-
-    return () => {
-      activeVideoRef.current = null
-      // Keep the node in the exiting preview for the leave animation, then park it.
-      window.setTimeout(() => {
-        parkWarmedVideo(warmed)
-      }, 320)
-    }
-  }, [active])
-
-  const showPreview = (
-    item: { id: string; video?: HoverVideo },
-    event: React.MouseEvent,
-  ) => {
-    if (!item.video) {
-      setActive(null)
-      return
-    }
-
-    const size = getPreviewSize(item.video.width, item.video.height)
+  const showPreview = (event: React.MouseEvent) => {
+    const size = getPreviewSize(preview.width, preview.height)
     sizeRef.current = size
-    pointerRef.current = { x: event.clientX, y: event.clientY }
 
     const next = getPreviewPosition(
       event.clientX,
@@ -157,8 +125,6 @@ export function useHoverVideoPreview() {
     )
 
     setActive({
-      id: item.id,
-      video: item.video,
       originX,
       originY,
       width: size.width,
@@ -170,13 +136,28 @@ export function useHoverVideoPreview() {
     setActive(null)
   }
 
-  const preview =
+  const reference = cloneElement(children, {
+    onMouseEnter: (event: React.MouseEvent) => {
+      children.props.onMouseEnter?.(event)
+      showPreview(event)
+    },
+    onMouseLeave: (event: React.MouseEvent) => {
+      children.props.onMouseLeave?.(event)
+      hidePreview()
+    },
+  })
+
+  if (!isValidElement(reference)) {
+    return children
+  }
+
+  const portal =
     mounted &&
     createPortal(
       <AnimatePresence>
         {active ? (
           <motion.div
-            key={active.id}
+            key={label}
             className="pointer-events-none fixed z-50 hidden overflow-hidden rounded-md bg-zinc-100 shadow-lg ring-1 ring-black/10 md:block dark:bg-zinc-900 dark:ring-white/10"
             style={{
               left: x,
@@ -190,12 +171,24 @@ export function useHoverVideoPreview() {
             exit={{ opacity: 0, scaleX: 0.08, scaleY: 0.08 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div ref={slotRef} className="h-full w-full" />
+            <Image
+              src={preview.src}
+              width={active.width}
+              height={active.height}
+              alt={label}
+              unoptimized
+              className="h-full w-full object-cover"
+            />
           </motion.div>
         ) : null}
       </AnimatePresence>,
       document.body,
     )
 
-  return { showPreview, hidePreview, preview }
+  return (
+    <>
+      {reference}
+      {portal}
+    </>
+  )
 }

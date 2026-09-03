@@ -1,6 +1,8 @@
 /**
  * Compress project hover-preview videos and upload them to Vercel Blob.
  *
+ * Hover previews on the site use local GIFs — run `npm run convert-previews` instead.
+ *
  * Usage: node --env-file=.env.local scripts/upload-videos.mjs
  *
  * Requires BLOB_READ_WRITE_TOKEN and ffmpeg on PATH.

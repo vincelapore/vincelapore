@@ -7,8 +7,8 @@ type Project = {
   image?: string
   /** Optional light-mode image; falls back to `image` */
   imageLight?: string
-  /** Hover preview video (Blob URL + intrinsic pixel size) */
-  video?: HoverVideo
+  /** Hover preview GIF under /public/projects/previews */
+  preview?: HoverPreview
   id: string
 }
 
@@ -20,15 +20,13 @@ type WorkExperience = {
   link?: string
   description?: string
   highlights?: string[]
-  video?: HoverVideo
+  preview?: HoverPreview
   id: string
 }
 
-export type HoverVideo = {
+export type HoverPreview = {
   src: string
-  /** Intrinsic width of the compressed preview file */
   width: number
-  /** Intrinsic height of the compressed preview file */
   height: number
 }
 
@@ -44,9 +42,6 @@ type SocialLink = {
   link: string
 }
 
-const HLS =
-  'https://ktimyrrm7b44q4zu.public.blob.vercel-storage.com/hls'
-
 export const PROJECTS: Project[] = [
   {
     name: 'Grademate',
@@ -56,10 +51,10 @@ export const PROJECTS: Project[] = [
     tags: ['Next.js', 'Stripe API', 'Supabase', 'SEO'],
     image: '/projects/grademate-dark.jpg',
     imageLight: '/projects/grademate-light.jpg',
-    video: {
-      src: `${HLS}/grademate/master.m3u8`,
-      width: 1216,
-      height: 720,
+    preview: {
+      src: '/projects/previews/grademate.gif',
+      width: 616,
+      height: 365,
     },
     id: 'project1',
   },
@@ -71,23 +66,23 @@ export const PROJECTS: Project[] = [
     tags: ['Next.js', 'Supabase', 'Tailwind'],
     image: '/projects/yorick-dark.jpg',
     imageLight: '/projects/yorick-light.jpg',
-    video: {
-      src: `${HLS}/yorick/master.m3u8`,
-      width: 1226,
-      height: 720,
+    preview: {
+      src: '/projects/previews/yorick.gif',
+      width: 616,
+      height: 362,
     },
     id: 'project2',
   },
   {
     name: '86: The Bartending App',
     description: 'Spec library SaaS for bar teams.',
-    link: 'https://eightysix.bar',
+    link: 'https://thebartending.app',
     tags: ['Swift', 'Supabase'],
     image: '/projects/eightysix-dark.jpg',
-    video: {
-      src: `${HLS}/eightysix/master.m3u8`,
+    preview: {
+      src: '/projects/previews/eightysix.gif',
       width: 332,
-      height: 720,
+      height: 722,
     },
     id: 'project3',
   },
@@ -98,10 +93,10 @@ export const PROJECTS: Project[] = [
     link: 'https://nic-davidson.com',
     tags: ['Next.js', 'Sanity'],
     image: '/projects/nic-davidson.jpg',
-    video: {
-      src: `${HLS}/nic-davidson/master.m3u8`,
-      width: 1216,
-      height: 720,
+    preview: {
+      src: '/projects/previews/nic-davidson.gif',
+      width: 616,
+      height: 365,
     },
     id: 'project4',
   },
@@ -134,10 +129,10 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
       'Learned extensive, evolving spirit and wine lists, memorising up to 100 classic and house cocktail recipes',
       'Balanced academics, late-night hours, and long commutes with social commitments',
     ],
-    video: {
-      src: `${HLS}/bartender/master.m3u8`,
+    preview: {
+      src: '/projects/previews/bartender.gif',
       width: 332,
-      height: 720,
+      height: 719,
     },
     id: 'work3',
   },

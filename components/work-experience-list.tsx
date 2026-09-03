@@ -1,12 +1,10 @@
 'use client'
 
 import { Spotlight } from '@/components/ui/spotlight'
-import { useHoverVideoPreview } from '@/components/hover-video-preview'
+import { HoverPreview } from '@/components/hover-preview'
 import { WORK_EXPERIENCE } from '@/app/data'
 
 export function WorkExperienceList() {
-  const { showPreview, hidePreview, preview } = useHoverVideoPreview()
-
   return (
     <div className="flex flex-col space-y-2">
       {WORK_EXPERIENCE.map((job) => {
@@ -51,32 +49,33 @@ export function WorkExperienceList() {
 
         if (job.link) {
           return (
-            <a
+            <HoverPreview
               key={job.id}
-              href={job.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={className}
-              onMouseEnter={(event) => showPreview(job, event)}
-              onMouseLeave={hidePreview}
+              preview={job.preview}
+              label={`${job.title} preview`}
             >
-              {body}
-            </a>
+              <a
+                href={job.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={className}
+              >
+                {body}
+              </a>
+            </HoverPreview>
           )
         }
 
         return (
-          <div
+          <HoverPreview
             key={job.id}
-            className={className}
-            onMouseEnter={(event) => showPreview(job, event)}
-            onMouseLeave={hidePreview}
+            preview={job.preview}
+            label={`${job.title} preview`}
           >
-            {body}
-          </div>
+            <div className={className}>{body}</div>
+          </HoverPreview>
         )
       })}
-      {preview}
     </div>
   )
 }

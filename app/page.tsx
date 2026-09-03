@@ -1,8 +1,8 @@
 'use client'
-import { motion } from 'motion/react'
 import { Magnetic } from '@/components/ui/magnetic'
 import Link from 'next/link'
 import { AnimatedBackground } from '@/components/ui/animated-background'
+import { PageEnter, PageSection } from '@/components/page-enter'
 import { ProjectList } from '@/components/project-list'
 import { WorkExperienceList } from '@/components/work-experience-list'
 import {
@@ -10,25 +10,6 @@ import {
   EMAIL,
   SOCIAL_LINKS,
 } from './data'
-
-const VARIANTS_CONTAINER = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
-}
-
-const VARIANTS_SECTION = {
-  hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
-}
-
-const TRANSITION_SECTION = {
-  duration: 0.3,
-}
 
 function MagneticSocialLink({
   children,
@@ -66,45 +47,28 @@ function MagneticSocialLink({
 
 export default function Personal() {
   return (
-    <motion.main
-      className="space-y-24"
-      variants={VARIANTS_CONTAINER}
-      initial="hidden"
-      animate="visible"
-    >
-      <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
-      >
+    <PageEnter className="space-y-24">
+      <PageSection>
         <div className="flex-1">
           <p className="text-zinc-600 dark:text-zinc-400">
             Junior Product Engineer building intuitive products from idea to
             ship: design, engineering, and growth in one loop.
           </p>
         </div>
-      </motion.section>
+      </PageSection>
 
-      <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
-      >
+      <PageSection>
         <h3 className="mb-5 text-lg font-medium">Selected Projects</h3>
         <ProjectList />
-      </motion.section>
+      </PageSection>
 
-      <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
-      >
+      <PageSection>
         <h3 className="mb-5 text-lg font-medium">Work Experience</h3>
         <WorkExperienceList />
-      </motion.section>
+      </PageSection>
 
       {BLOG_POSTS.length > 0 ? (
-        <motion.section
-          variants={VARIANTS_SECTION}
-          transition={TRANSITION_SECTION}
-        >
+        <PageSection>
           <h3 className="mb-3 text-lg font-medium">Blog</h3>
           <div className="flex flex-col space-y-0">
             <AnimatedBackground
@@ -135,13 +99,10 @@ export default function Personal() {
               ))}
             </AnimatedBackground>
           </div>
-        </motion.section>
+        </PageSection>
       ) : null}
 
-      <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
-      >
+      <PageSection>
         <h3 className="mb-5 text-lg font-medium">Connect</h3>
         <p className="mb-5 text-zinc-600 dark:text-zinc-400">
           Feel free to contact me at{' '}
@@ -156,7 +117,7 @@ export default function Personal() {
             </MagneticSocialLink>
           ))}
         </div>
-      </motion.section>
-    </motion.main>
+      </PageSection>
+    </PageEnter>
   )
 }

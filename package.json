@@ -8,10 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "transcode": "node --experimental-default-type=module scripts/transcode.js",
+    "convert-previews": "node --experimental-default-type=module scripts/convert-previews.mjs",
     "upload-hls": "node --env-file=.env.local --experimental-default-type=module scripts/upload.js",
     "upload-videos": "node --env-file=.env.local scripts/upload-videos.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/zalando-sans-expanded": "^5.3.0",
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
     "@next/mdx": "^14.2.13",
