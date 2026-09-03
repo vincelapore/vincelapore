@@ -1,421 +1,193 @@
-"use client";
+'use client'
+import { motion } from 'motion/react'
+import { Spotlight } from '@/components/ui/spotlight'
+import { Magnetic } from '@/components/ui/magnetic'
+import Link from 'next/link'
+import { AnimatedBackground } from '@/components/ui/animated-background'
+import { ProjectList } from '@/components/project-list'
+import {
+  WORK_EXPERIENCE,
+  BLOG_POSTS,
+  EMAIL,
+  SOCIAL_LINKS,
+} from './data'
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import LandingIntro from "./components/landing-intro";
-import FluidWebglBackground from "./components/fluid-webgl-background";
-
-const projects = [
-    {
-        name: "yorick.live",
-        tag: "DEVELOPER",
-        description:
-            "Theatre discovery map for indie shows. Visit yorick.live.",
-        href: "https://yorick.live"
+const VARIANTS_CONTAINER = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
     },
-    {
-        name: "eightysix.bar",
-        tag: "DEVELOPER",
-        description: "Spec library SaaS for bar teams. Visit eightysix.bar.",
-        href: "https://eightysix.bar"
-    },
-    {
-        name: "prehistoric",
-        tag: "ARTIST",
-        description: "A tender, physical stage production."
-    }
-];
-
-function usePrevious<T>(value: T) {
-    const ref = useRef<T>(value);
-    useEffect(() => {
-        ref.current = value;
-    }, [value]);
-    return ref.current;
+  },
 }
 
-function AnimatedMenuItem({
-    num,
-    name,
-    tag,
-    cta,
-    maxLen,
-    slots,
-    projectName,
-    href,
-    isAnchor,
-    handlers,
-    onClick,
-    showNumbers
+const VARIANTS_SECTION = {
+  hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
+  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+}
+
+const TRANSITION_SECTION = {
+  duration: 0.3,
+}
+
+function MagneticSocialLink({
+  children,
+  link,
 }: {
-    num: string;
-    name: string;
-    tag: string;
-    cta: string;
-    maxLen: number;
-    slots: unknown[];
-    projectName: string;
-    href?: string;
-    isAnchor: boolean;
-    handlers: {
-        onMouseEnter: () => void;
-        onMouseLeave: () => void;
-        onFocus: () => void;
-    };
-    onClick?: () => void;
-    showNumbers: boolean;
+  children: React.ReactNode
+  link: string
 }) {
-    const prevName = usePrevious(name);
-    const [outgoing, setOutgoing] = useState<string | null>(null);
-    const timeoutRef = useRef<number | null>(null);
-
-    useEffect(() => {
-        if (prevName === name) return;
-        setOutgoing(prevName);
-
-        if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-        timeoutRef.current = window.setTimeout(() => {
-            setOutgoing(null);
-        }, 900);
-
-        return () => {
-            if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-        };
-    }, [prevName, name]);
-
-    const renderContent = (
-        displayName: string,
-        mode: "in" | "out",
-        baseDelayMs: number
-    ) => {
-        const chars = displayName.split("");
-        const n = chars.length;
-        const nameEndDelay = baseDelayMs + (n - 1) * 14;
-
-        return (
-            <span
-                className={`landing__menu-content landing__menu-content--${mode}`}
-                style={
-                    mode === "in"
-                        ? {
-                              ["--name-length" as string]: n.toString()
-                          }
-                        : undefined
-                }
-            >
-                {showNumbers && (
-                    <span className='landing__menu-num'>{num}</span>
-                )}
-                <span className='landing__menu-label'>
-                    <span className='landing__menu-name-swap'>
-                        {chars.map((char, index) => {
-                            const delay = baseDelayMs + (n - index - 1) * 14;
-                            return (
-                                <span
-                                    key={`${mode}-${displayName}-${index}`}
-                                    className='landing__menu-name-char'
-                                    style={{ animationDelay: `${delay}ms` }}
-                                >
-                                    {char === " " ? "\u00A0" : char}
-                                </span>
-                            );
-                        })}
-                    </span>
-                    <span className='landing__menu-tag-group'>
-                        {slots.map((_, index) => {
-                            const tagChar = tag[index] ?? " ";
-                            const ctaChar = cta[index] ?? " ";
-                            const delayMs = (maxLen - index - 1) * 10;
-
-                            return (
-                                <span
-                                    key={`${projectName}-slot-${index}`}
-                                    className='landing__menu-tag-slot'
-                                >
-                                    <span
-                                        className='landing__menu-tag-char landing__menu-tag-char--tag'
-                                        style={{
-                                            transitionDelay: `${delayMs}ms`
-                                        }}
-                                    >
-                                        {tagChar === " " ? "\u00A0" : tagChar}
-                                    </span>
-                                    <span
-                                        className='landing__menu-tag-char landing__menu-tag-char--cta'
-                                        style={{
-                                            transitionDelay: `${delayMs}ms`
-                                        }}
-                                    >
-                                        {ctaChar === " " ? "\u00A0" : ctaChar}
-                                    </span>
-                                </span>
-                            );
-                        })}
-                    </span>
-                </span>
-            </span>
-        );
-    };
-
-    const Element = isAnchor ? "a" : "button";
-    const elementProps = isAnchor
-        ? { href, target: "_blank" as const, rel: "noreferrer" as const }
-        : { onClick, type: "button" as const };
-
-    return (
-        <Element
-            className='landing__menu-link landing__menu-link-swap'
-            {...elementProps}
-            {...handlers}
+  return (
+    <Magnetic springOptions={{ bounce: 0 }} intensity={0.3}>
+      <a
+        href={link}
+        className="group relative inline-flex shrink-0 items-center gap-[1px] rounded-full bg-zinc-100 px-2.5 py-1 text-sm text-black transition-colors duration-200 hover:bg-zinc-950 hover:text-zinc-50 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+      >
+        {children}
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 15 15"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-3 w-3"
         >
-            {outgoing && renderContent(outgoing, "out", 0)}
-            {renderContent(name, "in", outgoing ? 360 : 0)}
-        </Element>
-    );
+          <path
+            d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
+            fill="currentColor"
+            fillRule="evenodd"
+            clipRule="evenodd"
+          ></path>
+        </svg>
+      </a>
+    </Magnetic>
+  )
 }
 
-export default function Page() {
-    const router = useRouter();
-    const [hoverItem, setHoverItem] = useState<string | null>(null);
-    const [activeItem, setActiveItem] = useState<string | null>(null);
-    const [showMoreMenu, setShowMoreMenu] = useState(false);
-    const [wiggleWave, setWiggleWave] = useState(0);
-    const [showPrehistoricModal, setShowPrehistoricModal] = useState(false);
+export default function Personal() {
+  return (
+    <motion.main
+      className="space-y-24"
+      variants={VARIANTS_CONTAINER}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.section
+        variants={VARIANTS_SECTION}
+        transition={TRANSITION_SECTION}
+      >
+        <div className="flex-1">
+          <p className="text-zinc-600 dark:text-zinc-400">
+            Junior Product Engineer building intuitive products from idea to
+            ship — design, engineering, and growth in one loop.
+          </p>
+        </div>
+      </motion.section>
 
-    const prehistoricImages = [
-        { src: "/arts/prehistoric/image-1.png", alt: "Prehistoric rehearsal still 1" },
-        { src: "/arts/prehistoric/image-2.png", alt: "Prehistoric rehearsal still 2" },
-        { src: "/arts/prehistoric/image-4.png", alt: "Prehistoric rehearsal still 3" },
-        { src: "/arts/prehistoric/image-5.png", alt: "Prehistoric rehearsal still 4" },
-        { src: "/arts/prehistoric/image-6.png", alt: "Prehistoric rehearsal still 5" },
-        { src: "/arts/prehistoric/image-7.png", alt: "Prehistoric rehearsal still 6" },
-        { src: "/arts/prehistoric/image-8.png", alt: "Prehistoric rehearsal still 7" },
-        { src: "/arts/prehistoric/image-9.png", alt: "Prehistoric rehearsal still 8" },
-        { src: "/arts/prehistoric/image-10.png", alt: "Prehistoric rehearsal still 9" },
-        { src: "/arts/prehistoric/image-11.png", alt: "Prehistoric rehearsal still 10" },
-        { src: "/arts/prehistoric/image-12.png", alt: "Prehistoric rehearsal still 11" },
-        { src: "/arts/prehistoric/image-13.png", alt: "Prehistoric rehearsal still 12" }
-    ];
+      <motion.section
+        variants={VARIANTS_SECTION}
+        transition={TRANSITION_SECTION}
+      >
+        <h3 className="mb-5 text-lg font-medium">Selected Projects</h3>
+        <ProjectList />
+      </motion.section>
 
-    const interactionItem = hoverItem ?? activeItem;
-    const activeProject = projects.find(
-        (project) => project.name === interactionItem
-    );
+      <motion.section
+        variants={VARIANTS_SECTION}
+        transition={TRANSITION_SECTION}
+      >
+        <h3 className="mb-5 text-lg font-medium">Work Experience</h3>
+        <div className="flex flex-col space-y-2">
+          {WORK_EXPERIENCE.map((job) => (
+            <a
+              className="relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] dark:bg-zinc-600/30"
+              href={job.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              key={job.id}
+            >
+              <Spotlight
+                className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
+                size={64}
+              />
+              <div className="relative h-full w-full rounded-[15px] bg-white p-4 dark:bg-zinc-950">
+                <div className="relative flex w-full flex-row justify-between">
+                  <div>
+                    <h4 className="font-normal dark:text-zinc-100">
+                      {job.title}
+                    </h4>
+                    <p className="text-zinc-500 dark:text-zinc-400">
+                      {job.company}
+                    </p>
+                  </div>
+                  <p className="text-zinc-600 dark:text-zinc-400">
+                    {job.start} - {job.end}
+                  </p>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </motion.section>
 
-    const bottomNameMap: Record<string, string> = {
-        "yorick.live": "yorick",
-        "eightysix.bar": "86",
-        prehistoric: "theatre"
-    };
-
-    const moreMenuBottomNameMap: Record<string, string> = {
-        about: "me",
-        contact: "email",
-        wiggle: "yeah"
-    };
-
-    const getBottomName = () => {
-        if (!activeProject) return "LAPORE";
-
-        if (showMoreMenu) {
-            // Map project names to display names in more menu
-            const displayNameMap: Record<string, string> = {
-                "yorick.live": "about",
-                "eightysix.bar": "contact",
-                prehistoric: "wiggle"
-            };
-            const displayName = displayNameMap[activeProject.name];
-            return moreMenuBottomNameMap[displayName] ?? "LAPORE";
-        }
-
-        return bottomNameMap[activeProject.name] ?? "LAPORE";
-    };
-
-    const bottomName = getBottomName().toUpperCase();
-
-    const displayNameByProject = useMemo<Record<string, string>>(() => {
-        if (!showMoreMenu) {
-            return Object.fromEntries(projects.map((p) => [p.name, p.name]));
-        }
-
-        return {
-            "yorick.live": "about",
-            "eightysix.bar": "contact",
-            prehistoric: "wiggle"
-        };
-    }, [showMoreMenu]);
-
-    useEffect(() => {
-        document.body.classList.add("landing-scroll-lock");
-        document.documentElement.classList.add("landing-scroll-lock");
-
-        return () => {
-            document.body.classList.remove("landing-scroll-lock");
-            document.documentElement.classList.remove("landing-scroll-lock");
-        };
-    }, []);
-
-    useEffect(() => {
-        if (showPrehistoricModal) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
-
-        return () => {
-            document.body.style.overflow = "";
-        };
-    }, [showPrehistoricModal]);
-
-    return (
-        <section
-            className={`landing${
-                wiggleWave % 2 === 1 ? " landing--wiggle" : ""
-            }`}
+      {BLOG_POSTS.length > 0 ? (
+        <motion.section
+          variants={VARIANTS_SECTION}
+          transition={TRANSITION_SECTION}
         >
-            <LandingIntro />
-            <FluidWebglBackground />
-            <div className='landing__names'>
-                <div className='landing__name landing__name--top'>VINCE</div>
-                <div className='landing__name landing__name--bottom'>
-                    <span
-                        key={bottomName}
-                        className='landing__name-bottom-text'
-                    >
-                        {bottomName}
-                    </span>
-                </div>
-            </div>
-
-            <div className='landing__corners'>
-                <a
-                    href='mailto:hello@vincelapore.com'
-                    className='landing__corner-link'
+          <h3 className="mb-3 text-lg font-medium">Blog</h3>
+          <div className="flex flex-col space-y-0">
+            <AnimatedBackground
+              enableHover
+              className="h-full w-full rounded-lg bg-zinc-100 dark:bg-zinc-900/80"
+              transition={{
+                type: 'spring',
+                bounce: 0,
+                duration: 0.2,
+              }}
+            >
+              {BLOG_POSTS.map((post) => (
+                <Link
+                  key={post.uid}
+                  className="-mx-3 rounded-xl px-3 py-3"
+                  href={post.link}
+                  data-id={post.uid}
                 >
-                    contact
-                </a>
-            </div>
+                  <div className="flex flex-col space-y-1">
+                    <h4 className="font-normal dark:text-zinc-100">
+                      {post.title}
+                    </h4>
+                    <p className="text-zinc-500 dark:text-zinc-400">
+                      {post.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </AnimatedBackground>
+          </div>
+        </motion.section>
+      ) : null}
 
-            <nav className='landing__menu-bar'>
-                {projects.map((project, i) => {
-                    const displayName =
-                        displayNameByProject[project.name] ?? project.name;
-
-                    // Determine tag and CTA based on menu state and project
-                    let tag: string;
-                    let cta: string;
-
-                    if (showMoreMenu && displayName === "contact") {
-                        tag = "hello@vincelapore.com";
-                        cta = "send an email";
-                    } else {
-                        tag = project.tag.toLowerCase();
-                        cta = "click to open";
-                    }
-
-                    const maxLen = Math.max(tag.length, cta.length);
-                    const slots = Array.from({ length: maxLen });
-
-                    const handleClick = () => {
-                        if (!showMoreMenu) {
-                            // Handle prehistoric modal
-                            if (project.name === "prehistoric") {
-                                setShowPrehistoricModal(true);
-                                return;
-                            }
-                            // Regular project links handled by href
-                            return;
-                        }
-
-                        // Handle "more" menu actions
-                        if (displayName === "wiggle") {
-                            setWiggleWave((prev) => prev + 1);
-                        } else if (displayName === "contact") {
-                            window.location.href =
-                                "mailto:hello@vincelapore.com";
-                        } else if (displayName === "about") {
-                            // Navigate to about page if it exists, or handle as needed
-                            router.push("/about");
-                        }
-                    };
-
-                    return (
-                        <div key={project.name} className='landing__menu-item'>
-                            <AnimatedMenuItem
-                                num={String(i + 1).padStart(2, "0")}
-                                name={displayName}
-                                tag={tag}
-                                cta={cta}
-                                maxLen={maxLen}
-                                slots={slots}
-                                projectName={project.name}
-                                href={showMoreMenu ? undefined : project.href}
-                                isAnchor={showMoreMenu ? false : !!project.href}
-                                handlers={{
-                                    onMouseEnter: () =>
-                                        setHoverItem(project.name),
-                                    onMouseLeave: () => setHoverItem(null),
-                                    onFocus: () => setActiveItem(project.name)
-                                }}
-                                onClick={
-                                    showMoreMenu
-                                        ? handleClick
-                                        : project.name === "prehistoric"
-                                          ? handleClick
-                                          : undefined
-                                }
-                                showNumbers={!showMoreMenu}
-                            />
-                        </div>
-                    );
-                })}
-            </nav>
-
-            {/* Prehistoric Modal */}
-            {showPrehistoricModal && (
-                <div
-                    className='landing__modal-overlay'
-                    onClick={() => setShowPrehistoricModal(false)}
-                >
-                    <div
-                        className='landing__modal-content'
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button
-                            className='landing__modal-close'
-                            onClick={() => setShowPrehistoricModal(false)}
-                            aria-label='Close modal'
-                        >
-                            ×
-                        </button>
-                        <h2 className='landing__modal-title'>
-                            Prehistoric (2025)
-                        </h2>
-                        <p className='landing__modal-description'>
-                            As Pete. Held at PIP Theatre. A punk rock play set
-                            in 70s Brisbane. By Underground Theatre Company.
-                        </p>
-                        <div className='landing__modal-gallery'>
-                            {prehistoricImages.map((image, index) => (
-                                <div
-                                    key={index}
-                                    className='landing__modal-image-wrapper'
-                                >
-                                    <Image
-                                        src={image.src}
-                                        alt={image.alt}
-                                        width={600}
-                                        height={800}
-                                        className='landing__modal-image'
-                                        sizes='(max-width: 768px) 100vw, 50vw'
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            )}
-        </section>
-    );
+      <motion.section
+        variants={VARIANTS_SECTION}
+        transition={TRANSITION_SECTION}
+      >
+        <h3 className="mb-5 text-lg font-medium">Connect</h3>
+        <p className="mb-5 text-zinc-600 dark:text-zinc-400">
+          Feel free to contact me at{' '}
+          <a className="underline dark:text-zinc-300" href={`mailto:${EMAIL}`}>
+            {EMAIL}
+          </a>
+        </p>
+        <div className="flex items-center justify-start space-x-3">
+          {SOCIAL_LINKS.map((link) => (
+            <MagneticSocialLink key={link.label} link={link.link}>
+              {link.label}
+            </MagneticSocialLink>
+          ))}
+        </div>
+      </motion.section>
+    </motion.main>
+  )
 }
