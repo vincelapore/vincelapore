@@ -79,7 +79,7 @@ export default function Personal() {
         <div className="flex-1">
           <p className="text-zinc-600 dark:text-zinc-400">
             Junior Product Engineer building intuitive products from idea to
-            ship — design, engineering, and growth in one loop.
+            ship: design, engineering, and growth in one loop.
           </p>
         </div>
       </motion.section>

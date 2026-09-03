@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: '%s | Vince Lapore',
   },
   description:
-    'Vince Lapore is a Junior Product Engineer based in Australia — building products at the intersection of design, engineering, and growth.',
+    'Vince Lapore is a Junior Product Engineer based in Australia, building products at the intersection of design, engineering, and growth.',
   applicationName: 'Vince Lapore',
   authors: [{ name: 'Vince Lapore', url: 'https://vincelapore.com' }],
   creator: 'Vince Lapore',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Vince Lapore',
     description:
-      'Junior Product Engineer — building products at the intersection of design, engineering, and growth.',
+      'Junior Product Engineer building products at the intersection of design, engineering, and growth.',
     url: 'https://vincelapore.com',
     siteName: 'Vince Lapore',
     locale: 'en_AU',
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Vince Lapore',
     description:
-      'Junior Product Engineer — building products at the intersection of design, engineering, and growth.',
+      'Junior Product Engineer building products at the intersection of design, engineering, and growth.',
   },
   icons: {
     icon: [

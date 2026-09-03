@@ -44,3 +44,4 @@ next-env.d.ts
 /public/videos/*
 !/public/videos/.gitkeep
 .tmp/
+/output/

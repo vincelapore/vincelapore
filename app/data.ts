@@ -44,19 +44,23 @@ type SocialLink = {
   link: string
 }
 
-const BLOB =
-  'https://ktimyrrm7b44q4zu.public.blob.vercel-storage.com/projects'
+const HLS =
+  'https://ktimyrrm7b44q4zu.public.blob.vercel-storage.com/hls'
 
 export const PROJECTS: Project[] = [
   {
     name: 'Grademate',
     description:
-      'Grade calculator SaaS — from database and billing to UI, grown through SEO and organic adoption.',
+      'Grade calculator SaaS, from database and billing to UI, grown through SEO and organic adoption.',
     link: 'https://grademate.dev',
     tags: ['Next.js', 'Stripe API', 'Supabase', 'SEO'],
     image: '/projects/grademate-dark.jpg',
     imageLight: '/projects/grademate-light.jpg',
-    video: { src: `${BLOB}/grademate.mp4`, width: 720, height: 426 },
+    video: {
+      src: `${HLS}/grademate/master.m3u8`,
+      width: 1216,
+      height: 720,
+    },
     id: 'project1',
   },
   {
@@ -67,26 +71,38 @@ export const PROJECTS: Project[] = [
     tags: ['Next.js', 'Supabase', 'Tailwind'],
     image: '/projects/yorick-dark.jpg',
     imageLight: '/projects/yorick-light.jpg',
-    video: { src: `${BLOB}/yorick.mp4`, width: 720, height: 424 },
+    video: {
+      src: `${HLS}/yorick/master.m3u8`,
+      width: 1226,
+      height: 720,
+    },
     id: 'project2',
   },
   {
-    name: 'eightysix.bar',
+    name: '86: The Bartending App',
     description: 'Spec library SaaS for bar teams.',
     link: 'https://eightysix.bar',
-    tags: ['Swift', 'Supabase', 'Stripe API'],
+    tags: ['Swift', 'Supabase'],
     image: '/projects/eightysix-dark.jpg',
-    video: { src: `${BLOB}/eightysix.mp4`, width: 332, height: 720 },
+    video: {
+      src: `${HLS}/eightysix/master.m3u8`,
+      width: 332,
+      height: 720,
+    },
     id: 'project3',
   },
   {
     name: 'Nic Davidson',
     description:
-      'Theatre artist portfolio — acting, directing, and playwriting, with a Sanity-backed catalogue of productions.',
+      'Theatre artist portfolio spanning acting, directing, and playwriting, with a Sanity-backed catalogue of productions.',
     link: 'https://nic-davidson.com',
-    tags: ['Next.js', 'Sanity', 'GSAP'],
+    tags: ['Next.js', 'Sanity'],
     image: '/projects/nic-davidson.jpg',
-    video: { src: `${BLOB}/nic-davidson.mp4`, width: 720, height: 426 },
+    video: {
+      src: `${HLS}/nic-davidson/master.m3u8`,
+      width: 1216,
+      height: 720,
+    },
     id: 'project4',
   },
 ]
@@ -115,10 +131,14 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
       'People skills, flexibility, and focus across Central Restaurant (hatted), LOS, sAme sAme & Biànca.',
     highlights: [
       'Addressed challenging customers while maintaining hospitality',
-      'Learned extensive, evolving spirit and wine lists — memorising up to 100 classic and house cocktail recipes',
+      'Learned extensive, evolving spirit and wine lists, memorising up to 100 classic and house cocktail recipes',
       'Balanced academics, late-night hours, and long commutes with social commitments',
     ],
-    video: { src: `${BLOB}/bartender.mp4`, width: 332, height: 720 },
+    video: {
+      src: `${HLS}/bartender/master.m3u8`,
+      width: 332,
+      height: 720,
+    },
     id: 'work3',
   },
 ]

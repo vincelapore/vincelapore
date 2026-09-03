@@ -1,3 +1,4 @@
+import Hls from 'hls.js'
 import { PROJECTS, WORK_EXPERIENCE } from '@/app/data'
 
 /** Unique hover-preview video URLs used across the site. */
@@ -16,6 +17,11 @@ export function getHoverVideoUrls() {
 }
 
 const warmed = new Map<string, HTMLVideoElement>()
+const hlsByUrl = new Map<string, Hls>()
+
+function isHlsUrl(url: string) {
+  return /\.m3u8(\?|$)/i.test(url)
+}
 
 function getHost() {
   let host = document.getElementById('video-preload-host')
@@ -28,6 +34,35 @@ function getHost() {
     document.body.appendChild(host)
   }
   return host
+}
+
+function attachSource(video: HTMLVideoElement, url: string) {
+  const existing = hlsByUrl.get(url)
+  if (existing) {
+    existing.destroy()
+    hlsByUrl.delete(url)
+  }
+
+  if (isHlsUrl(url)) {
+    if (Hls.isSupported()) {
+      const hls = new Hls({
+        enableWorker: true,
+        // Prefer the lowest ladder rung for tiny hover previews.
+        startLevel: 0,
+      })
+      hls.loadSource(url)
+      hls.attachMedia(video)
+      hlsByUrl.set(url, hls)
+      return
+    }
+
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = url
+      return
+    }
+  }
+
+  video.src = url
 }
 
 export function getWarmedVideo(url: string) {
@@ -49,10 +84,12 @@ export function ensureWarmedVideo(url: string) {
   video.setAttribute('playsinline', '')
   video.setAttribute('webkit-playsinline', '')
   video.setAttribute('muted', '')
-  video.src = url
+  attachSource(video, url)
   warmed.set(url, video)
   host.appendChild(video)
-  video.load()
+  if (!isHlsUrl(url) || video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.load()
+  }
   return video
 }
 
@@ -70,7 +107,7 @@ export function parkWarmedVideo(video: HTMLVideoElement) {
 }
 
 /** Warm + prime decoders so the first hover can play without a cold start. */
-export function preloadVideos(urls: string[]) {
+export function preloadVideos(urls: string[] = getHoverVideoUrls()) {
   if (typeof document === 'undefined' || urls.length === 0) {
     return Promise.resolve()
   }
@@ -113,16 +150,19 @@ export function preloadVideos(urls: string[]) {
           }
 
           video.addEventListener('canplaythrough', finish, { once: true })
+          video.addEventListener('canplay', finish, { once: true })
           video.addEventListener('error', finish, { once: true })
-          window.setTimeout(finish, 8000)
+          window.setTimeout(finish, 12000)
 
           if (!existing) {
             warmed.set(url, video)
             host.appendChild(video)
-            video.src = url
+            attachSource(video, url)
           }
 
-          video.load()
+          if (!isHlsUrl(url) || video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.load()
+          }
         }),
     ),
   ).then(() => undefined)

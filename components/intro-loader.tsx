@@ -11,7 +11,7 @@ import gsap from 'gsap'
 import { LogoMark } from '@/components/logo-mark'
 import { getHoverVideoUrls, preloadVideos } from '@/lib/preload-videos'
 
-const SESSION_KEY = 'vl-intro-seen-v5'
+const SESSION_KEY = 'vl-intro-seen-v9'
 
 const IntroReadyContext = createContext(false)
 
@@ -80,18 +80,32 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
     const videosReady = preloadVideos(getHoverVideoUrls())
 
     // Hide the "v" so only "ince" contributes width while we measure.
-    gsap.set(v, { opacity: 0, width: 0, overflow: 'hidden', display: 'inline-block' })
-    gsap.set(ince, { opacity: 0 })
-    gsap.set(mark, { opacity: 0, scale: 0.9 })
+    gsap.set(v, {
+      opacity: 0,
+      width: 0,
+      overflow: 'hidden',
+      display: 'inline-block',
+    })
+    gsap.set(mark, { opacity: 0, scale: 0.94 })
+
+    // Measure full "ince" width, then clear for the typewriter reveal.
+    const inceWidth = ince.offsetWidth
+    ince.textContent = ''
+    gsap.set(ince, { opacity: 1 })
 
     const logoWidth = mark.offsetWidth
-    const inceWidth = ince.offsetWidth
     const tuck = Math.round(logoWidth * 0.34)
     // Park "ince" just past the logo's right edge, with the "i" slightly under it.
     const inceStartX = logoWidth + inceWidth - Math.round(logoWidth * 0.22)
 
+    // `first` is right-anchored (right-full), so raw width growth expands left.
+    // Shift x with the typed width so the left edge stays fixed and letters
+    // grow rightward (i → in → inc → ince, center-outward).
+    const typeX = (currentWidth: number) =>
+      inceStartX - (inceWidth - currentWidth)
+
     // yPercent keeps vertical centering when GSAP owns the transform.
-    gsap.set(first, { x: inceStartX, yPercent: -50, top: '50%' })
+    gsap.set(first, { x: typeX(0), yPercent: -50, top: '50%' })
     gsap.set(apore, { opacity: 0, x: -tuck + 12, yPercent: -50, top: '50%' })
 
     let finished = false
@@ -101,49 +115,53 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
         defaults: { ease: 'power3.out' },
       })
 
+      // Beat structure: mark → type "ince" → assemble "vince" → "apore" → hold.
       intro
         .to(mark, {
           opacity: 1,
           scale: 1,
-          duration: 0.7,
+          duration: 0.5,
+          ease: 'power2.out',
         })
-        .to(
-          ince,
-          {
-            opacity: 1,
-            duration: 0.4,
-          },
-          '-=0.12',
-        )
-        .to(
-          first,
-          {
-            x: tuck,
-            duration: 0.9,
-            ease: 'power3.inOut',
-          },
-          '+=0.15',
-        )
+        .to({}, { duration: 0.28 })
+
+      for (const step of ['i', 'in', 'inc', 'ince'] as const) {
+        intro
+          .call(() => {
+            ince.textContent = step
+            gsap.set(first, { x: typeX(ince.offsetWidth) })
+          })
+          .to({}, { duration: 0.2 })
+      }
+
+      intro
+        .to({}, { duration: 0.55 })
+        .to(first, {
+          x: tuck,
+          duration: 1.55,
+          ease: 'power3.inOut',
+        })
         .to(
           v,
           {
             opacity: 1,
             width: 'auto',
-            duration: 0.35,
+            duration: 0.75,
             ease: 'power2.out',
           },
-          '<0.3',
+          '<0.55',
         )
         .to(
           apore,
           {
             opacity: 1,
             x: -tuck,
-            duration: 0.45,
+            duration: 0.95,
+            ease: 'power3.out',
           },
-          '-=0.05',
+          '-=0.2',
         )
-        .to({}, { duration: 0.45 })
+        .to({}, { duration: 1 })
 
       void intro.then(async () => {
         await Promise.race([
@@ -166,24 +184,25 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
         exit
           .to(word, {
             opacity: 0,
-            y: -16,
-            filter: 'blur(6px)',
-            duration: 0.4,
-            ease: 'power2.in',
+            y: -10,
+            filter: 'blur(8px)',
+            duration: 0.8,
+            ease: 'power2.inOut',
           })
           .to(
             overlay,
             {
               yPercent: -100,
-              duration: 0.75,
-              ease: 'power4.inOut',
+              duration: 1,
+              ease: 'power3.inOut',
             },
-            '-=0.1',
+            '-=0.25',
           )
       })
     })
 
     return () => {
+      ince.textContent = 'ince'
       if (finished) ctx.kill()
       else ctx.revert()
     }
@@ -203,7 +222,7 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
         >
           <h1
             ref={wordRef}
-            className="relative inline-flex items-center text-[1.65rem] font-semibold tracking-tight lowercase text-white sm:text-[1.9rem]"
+            className="relative inline-flex items-center text-[1.65rem] font-semibold tracking-tight text-white lowercase sm:text-[1.9rem]"
             style={phase === 'pending' ? { opacity: 0 } : undefined}
           >
             <span
@@ -216,12 +235,18 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
               >
                 v
               </span>
-              <span ref={inceRef} className="inline-block will-change-transform">
+              <span
+                ref={inceRef}
+                className="inline-block will-change-transform"
+              >
                 ince
               </span>
             </span>
 
-            <span ref={markRef} className="relative z-0 inline-flex will-change-transform">
+            <span
+              ref={markRef}
+              className="relative z-0 inline-flex will-change-transform"
+            >
               <LogoMark className="h-12 w-auto sm:h-14" fill="white" />
             </span>
 
