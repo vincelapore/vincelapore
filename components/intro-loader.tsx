@@ -10,7 +10,7 @@ import {
 import gsap from 'gsap'
 import { LogoMark } from '@/components/logo-mark'
 
-const SESSION_KEY = 'vl-intro-seen-v9'
+const SESSION_KEY = 'vl-intro-seen-v10'
 
 const IntroReadyContext = createContext(false)
 
@@ -110,14 +110,15 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
       })
 
       // Beat structure: mark → type "ince" → assemble "vince" → "apore" → hold.
+      // Tuned for ~3s total — confident, not leisurely. Employers shouldn't wait.
       intro
         .to(mark, {
           opacity: 1,
           scale: 1,
-          duration: 0.5,
+          duration: 0.32,
           ease: 'power2.out',
         })
-        .to({}, { duration: 0.28 })
+        .to({}, { duration: 0.1 })
 
       for (const step of ['i', 'in', 'inc', 'ince'] as const) {
         intro
@@ -125,14 +126,14 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
             ince.textContent = step
             gsap.set(first, { x: typeX(ince.offsetWidth) })
           })
-          .to({}, { duration: 0.2 })
+          .to({}, { duration: 0.11 })
       }
 
       intro
-        .to({}, { duration: 0.55 })
+        .to({}, { duration: 0.22 })
         .to(first, {
           x: tuck,
-          duration: 1.55,
+          duration: 0.85,
           ease: 'power3.inOut',
         })
         .to(
@@ -140,22 +141,22 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
           {
             opacity: 1,
             width: 'auto',
-            duration: 0.75,
+            duration: 0.4,
             ease: 'power2.out',
           },
-          '<0.55',
+          '<0.3',
         )
         .to(
           apore,
           {
             opacity: 1,
             x: -tuck,
-            duration: 0.95,
+            duration: 0.5,
             ease: 'power3.out',
           },
-          '-=0.2',
+          '-=0.15',
         )
-        .to({}, { duration: 1 })
+        .to({}, { duration: 0.35 })
 
       void intro.then(() => {
         const exit = gsap.timeline({
@@ -171,19 +172,19 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
         exit
           .to(word, {
             opacity: 0,
-            y: -10,
-            filter: 'blur(8px)',
-            duration: 0.8,
+            y: -8,
+            filter: 'blur(6px)',
+            duration: 0.4,
             ease: 'power2.inOut',
           })
           .to(
             overlay,
             {
               yPercent: -100,
-              duration: 1,
+              duration: 0.55,
               ease: 'power3.inOut',
             },
-            '-=0.25',
+            '-=0.18',
           )
       })
     })

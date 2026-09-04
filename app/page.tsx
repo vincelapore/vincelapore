@@ -5,11 +5,7 @@ import { AnimatedBackground } from '@/components/ui/animated-background'
 import { PageEnter, PageSection } from '@/components/page-enter'
 import { ProjectList } from '@/components/project-list'
 import { WorkExperienceList } from '@/components/work-experience-list'
-import {
-  BLOG_POSTS,
-  EMAIL,
-  SOCIAL_LINKS,
-} from './data'
+import { BLOG_POSTS, EMAIL, SOCIAL_LINKS } from './data'
 
 function MagneticSocialLink({
   children,
@@ -51,8 +47,13 @@ export default function Personal() {
       <PageSection>
         <div className="flex-1">
           <p className="text-zinc-600 dark:text-zinc-400">
-            Junior Product Engineer building intuitive products from idea to
-            ship: design, engineering, and growth in one loop.
+            Hi! I&apos;m Vince, a software engineer and actor in Brisbane, moving
+            to Melbourne in October. I build products end to end: right now
+            that&apos;s GradeMate, a grade calculator used by 180+ students, and
+            Eighty Six, a specs and costing app currently beta-testing in the
+            hands of bartenders (I&apos;ve worked behind the bar for five years).
+            I studied Computer Science at UQ. I care about interfaces that feel
+            good and products that actually get used.
           </p>
         </div>
       </PageSection>
@@ -105,7 +106,8 @@ export default function Personal() {
       <PageSection>
         <h3 className="mb-5 text-lg font-medium">Connect</h3>
         <p className="mb-5 text-zinc-600 dark:text-zinc-400">
-          Feel free to contact me at{' '}
+          Currently open to junior software engineering roles, and website
+          clients. Feel free to contact me at{' '}
           <a className="underline dark:text-zinc-300" href={`mailto:${EMAIL}`}>
             {EMAIL}
           </a>

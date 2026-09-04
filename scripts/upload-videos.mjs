@@ -28,7 +28,7 @@ const VIDEOS = [
     source: 'nic davidson recording.mp4',
     key: 'projects/nic-davidson.mp4',
   },
-  { source: 'bartender.mov', key: 'projects/bartender.mp4' },
+  { source: 'bartender.mp4', key: 'projects/bartender.mp4' },
 ]
 
 function formatBytes(bytes) {

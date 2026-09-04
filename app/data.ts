@@ -9,6 +9,11 @@ type Project = {
   imageLight?: string
   /** Hover preview GIF under /public/projects/previews */
   preview?: HoverPreview
+  /** Nested title link rendered as "Name (and Label)" */
+  secondaryLink?: {
+    label: string
+    href: string
+  }
   id: string
 }
 
@@ -46,7 +51,7 @@ export const PROJECTS: Project[] = [
   {
     name: 'Grademate',
     description:
-      'Grade calculator SaaS, from database and billing to UI, grown through SEO and organic adoption.',
+      'Grade calculator SaaS, from database and billing to UI, grown through SEO and organic adoption. Used by 180+ students.',
     link: 'https://grademate.dev',
     tags: ['Next.js', 'Stripe API', 'Supabase', 'SEO'],
     image: '/projects/grademate-dark.jpg',
@@ -59,11 +64,15 @@ export const PROJECTS: Project[] = [
     id: 'project1',
   },
   {
-    name: 'yorick.live',
+    name: 'Yorick Live',
     description:
-      'Discovery and portfolio platform for actors, built for casting-ready personal brands.',
+      'A portfolio and discovery platform for indie theatre: structured credits, media uploads, industry-facing profiles. 20 industry users in the first week.',
     link: 'https://yorick.live',
-    tags: ['Next.js', 'Supabase', 'Tailwind'],
+    secondaryLink: {
+      label: 'Stage',
+      href: 'https://stage.yorick.live/avaryan',
+    },
+    tags: ['Next.js', 'Supabase', 'Tailwind', 'Python'],
     image: '/projects/yorick-dark.jpg',
     imageLight: '/projects/yorick-light.jpg',
     preview: {
@@ -75,7 +84,7 @@ export const PROJECTS: Project[] = [
   },
   {
     name: '86: The Bartending App',
-    description: 'Spec library SaaS for bar teams.',
+    description: 'Cocktail recipes are inconsistent and messy across a bar. A spec library app for bar teams and the solo tender.',
     link: 'https://thebartending.app',
     tags: ['Swift', 'Supabase'],
     image: '/projects/eightysix-dark.jpg',
@@ -89,7 +98,7 @@ export const PROJECTS: Project[] = [
   {
     name: 'Nic Davidson',
     description:
-      'Theatre artist portfolio spanning acting, directing, and playwriting, with a Sanity-backed catalogue of productions.',
+      'Commissioned by a theatre artist to showcase their portfolio, with a Sanity CMS integration.',
     link: 'https://nic-davidson.com',
     tags: ['Next.js', 'Sanity'],
     image: '/projects/nic-davidson.jpg',
@@ -120,19 +129,18 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     id: 'work2',
   },
   {
-    company: 'Anyday Group',
+    company: 'LOS, sAme sAme Restaurant, Biànca, Central Restaurant (hatted)',
     title: 'Cocktail Bartender',
+    start: '2022',
+    end: '2026',
     description:
-      'People skills, flexibility, and focus across Central Restaurant (hatted), LOS, sAme sAme & Biànca.',
+      'People skills, reliability, and focus under pressure across multiple high-end venues.',
     highlights: [
-      'Addressed challenging customers while maintaining hospitality',
-      'Learned extensive, evolving spirit and wine lists, memorising up to 100 classic and house cocktail recipes',
-      'Balanced academics, late-night hours, and long commutes with social commitments',
-    ],
+      ],
     preview: {
       src: '/projects/previews/bartender.gif',
       width: 332,
-      height: 719,
+      height: 590,
     },
     id: 'work3',
   },

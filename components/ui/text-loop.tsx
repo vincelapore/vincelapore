@@ -7,7 +7,13 @@ import {
   Variants,
   AnimatePresenceProps,
 } from 'motion/react'
-import { useState, useEffect, Children } from 'react'
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  Children,
+} from 'react'
 
 export type TextLoopProps = {
   children: React.ReactNode[]
@@ -24,13 +30,15 @@ export function TextLoop({
   children,
   className,
   interval = 2,
-  transition = { duration: 0.3 },
+  transition = { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
   variants,
   onIndexChange,
   trigger = true,
   mode = 'popLayout',
 }: TextLoopProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [width, setWidth] = useState<number | 'auto'>('auto')
+  const measureRef = useRef<HTMLSpanElement>(null)
   const items = Children.toArray(children)
 
   useEffect(() => {
@@ -47,14 +55,36 @@ export function TextLoop({
     return () => clearInterval(timer)
   }, [items.length, interval, onIndexChange, trigger])
 
+  useLayoutEffect(() => {
+    const el = measureRef.current
+    if (!el) return
+    setWidth(el.getBoundingClientRect().width)
+  }, [currentIndex, items])
+
   const motionVariants: Variants = {
-    initial: { y: 20, opacity: 0 },
+    initial: { y: 12, opacity: 0 },
     animate: { y: 0, opacity: 1 },
-    exit: { y: -20, opacity: 0 },
+    exit: { y: -12, opacity: 0 },
   }
 
   return (
-    <div className={cn('relative inline-block whitespace-nowrap', className)}>
+    <motion.div
+      className={cn(
+        'relative inline-block overflow-hidden whitespace-nowrap align-bottom',
+        className,
+      )}
+      initial={false}
+      animate={{ width }}
+      transition={transition}
+    >
+      {/* Off-flow measure so width can animate without jumping */}
+      <span
+        ref={measureRef}
+        className="invisible absolute left-0 top-0 whitespace-nowrap"
+        aria-hidden
+      >
+        {items[currentIndex]}
+      </span>
       <AnimatePresence mode={mode} initial={false}>
         <motion.div
           key={currentIndex}
@@ -67,6 +97,6 @@ export function TextLoop({
           {items[currentIndex]}
         </motion.div>
       </AnimatePresence>
-    </div>
+    </motion.div>
   )
 }

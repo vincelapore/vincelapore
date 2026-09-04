@@ -28,7 +28,7 @@ const DEFAULT_VIDEOS = [
   { source: 'yorick.mp4', id: 'yorick' },
   { source: 'eightysix.MP4', id: 'eightysix' },
   { source: 'nic davidson recording.mp4', id: 'nic-davidson' },
-  { source: 'bartender.mov', id: 'bartender' },
+  { source: 'bartender.mp4', id: 'bartender' },
 ]
 
 const VARIANTS = [

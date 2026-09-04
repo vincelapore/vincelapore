@@ -2,9 +2,15 @@
 import { TextEffect } from '@/components/ui/text-effect'
 import { useIntroReady } from '@/components/intro-loader'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export function Header() {
   const introReady = useIntroReady()
+  const pathname = usePathname()
+
+  if (pathname === '/about') {
+    return null
+  }
 
   return (
     <header className="mb-8 flex items-center justify-between">

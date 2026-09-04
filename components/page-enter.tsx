@@ -8,18 +8,20 @@ export const PAGE_VARIANTS_CONTAINER = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.08,
+      delayChildren: 0.04,
     },
   },
 }
 
 export const PAGE_VARIANTS_SECTION = {
-  hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
+  hidden: { opacity: 0, y: 12, filter: 'blur(4px)' },
   visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
 }
 
 export const PAGE_TRANSITION_SECTION = {
-  duration: 0.3,
+  duration: 0.32,
+  ease: [0.22, 1, 0.36, 1] as const,
 }
 
 type PageEnterProps = {

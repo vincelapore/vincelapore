@@ -66,34 +66,54 @@ export function ProjectList() {
             preview={project.preview}
             label={`${project.name} preview`}
           >
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group -mx-3 block rounded-md px-3 py-2 transition-colors duration-200 hover:bg-zinc-200/80 dark:hover:bg-zinc-800"
-            >
-              <ProjectImage
-                src={project.image}
-                srcLight={project.imageLight}
-                alt={project.name}
+            <div className="group relative -mx-3 rounded-md px-3 py-2 transition-colors duration-200 hover:bg-zinc-200/80 dark:hover:bg-zinc-800">
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute inset-0 z-0 rounded-md"
+                aria-label={project.name}
               />
-              <span className="font-base relative inline-block font-[450] text-zinc-900 dark:text-zinc-50">
-                {project.name}
-              </span>
-              <p className="mt-1 text-base text-zinc-600 dark:text-zinc-400">
-                {project.description}
-              </p>
-              <ul className="mt-3 flex flex-wrap gap-1.5">
-                {project.tags.map((tag) => (
-                  <li
-                    key={tag}
-                    className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 transition-colors group-hover:bg-zinc-300/60 dark:bg-zinc-800 dark:text-zinc-400 dark:group-hover:bg-zinc-700"
-                  >
-                    {tag}
-                  </li>
-                ))}
-              </ul>
-            </a>
+              <div className="relative z-10 pointer-events-none">
+                <ProjectImage
+                  src={project.image}
+                  srcLight={project.imageLight}
+                  alt={project.name}
+                />
+                <span className="font-base relative inline-block font-[450] text-zinc-900 dark:text-zinc-50">
+                  {project.name}
+                  {project.secondaryLink ? (
+                    <>
+                      {' '}
+                      (and{' '}
+                      <a
+                        href={project.secondaryLink.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="pointer-events-auto relative z-20 underline underline-offset-2 decoration-zinc-400 transition-colors hover:decoration-zinc-900 dark:decoration-zinc-500 dark:hover:decoration-zinc-200"
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        {project.secondaryLink.label}
+                      </a>
+                      )
+                    </>
+                  ) : null}
+                </span>
+                <p className="mt-1 text-base text-zinc-600 dark:text-zinc-400">
+                  {project.description}
+                </p>
+                <ul className="mt-3 flex flex-wrap gap-1.5">
+                  {project.tags.map((tag) => (
+                    <li
+                      key={tag}
+                      className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 transition-colors group-hover:bg-zinc-300/60 dark:bg-zinc-800 dark:text-zinc-400 dark:group-hover:bg-zinc-700"
+                    >
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </HoverPreview>
         ))}
       </div>

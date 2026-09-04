@@ -31,7 +31,7 @@ const VIDEOS = [
     width: LANDSCAPE_WIDTH,
   },
   { source: 'eightysix.MP4', output: 'eightysix.gif', width: PORTRAIT_WIDTH },
-  { source: 'bartender.mov', output: 'bartender.gif', width: PORTRAIT_WIDTH },
+  { source: 'bartender.mp4', output: 'bartender.gif', width: PORTRAIT_WIDTH },
 ]
 
 function formatBytes(bytes) {
