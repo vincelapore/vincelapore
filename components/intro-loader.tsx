@@ -4,10 +4,12 @@ import {
   createContext,
   useContext,
   useLayoutEffect,
+  useEffect,
   useRef,
   useState,
 } from 'react'
 import gsap from 'gsap'
+import { useTheme } from 'next-themes'
 import { LogoMark } from '@/components/logo-mark'
 
 const SESSION_KEY = 'vl-intro-seen-v10'
@@ -40,6 +42,7 @@ function markIntroSeen() {
 
 export function IntroLoader({ children }: { children: React.ReactNode }) {
   const [phase, setPhase] = useState<'pending' | 'intro' | 'done'>('pending')
+  const { resolvedTheme } = useTheme()
   const overlayRef = useRef<HTMLDivElement>(null)
   const wordRef = useRef<HTMLHeadingElement>(null)
   const markRef = useRef<HTMLDivElement>(null)
@@ -48,6 +51,49 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
   const inceRef = useRef<HTMLSpanElement>(null)
   const aporeRef = useRef<HTMLSpanElement>(null)
   const ranRef = useRef(false)
+
+  const showOverlay = phase === 'pending' || phase === 'intro'
+  const isDark =
+    resolvedTheme === 'dark' ||
+    (resolvedTheme == null &&
+      typeof document !== 'undefined' &&
+      document.documentElement.classList.contains('dark'))
+  const browserColor = isDark ? '#09090b' : '#ffffff'
+
+  useEffect(() => {
+    if (!showOverlay) return
+
+    const metas = document.querySelectorAll('meta[name="theme-color"]')
+    const previous = Array.from(metas).map((meta) => ({
+      meta: meta as HTMLMetaElement,
+      content: meta.getAttribute('content'),
+      media: meta.getAttribute('media'),
+    }))
+
+    if (metas.length === 0) {
+      const meta = document.createElement('meta')
+      meta.name = 'theme-color'
+      meta.content = browserColor
+      document.head.appendChild(meta)
+      return () => {
+        meta.remove()
+      }
+    }
+
+    metas.forEach((meta) => {
+      meta.setAttribute('content', browserColor)
+      meta.removeAttribute('media')
+    })
+
+    return () => {
+      previous.forEach(({ meta, content, media }) => {
+        if (content != null) meta.setAttribute('content', content)
+        else meta.removeAttribute('content')
+        if (media != null) meta.setAttribute('media', media)
+        else meta.removeAttribute('media')
+      })
+    }
+  }, [showOverlay, browserColor])
 
   useLayoutEffect(() => {
     if (ranRef.current) return
@@ -167,10 +213,11 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
           },
         })
 
-        // Page (including fixed nav) stays fully painted underneath —
-        // only the overlay exits, so the navbar doesn't fade/jump in.
+        // Blur the pieces themselves — never filter the <h1> parent.
+        // Filtering a parent of mix-blend-difference flattens the blend
+        // (invert vanishes / light-mode artifacts). Keep invert intact.
         exit
-          .to(word, {
+          .to([first, mark, apore], {
             opacity: 0,
             y: -8,
             filter: 'blur(6px)',
@@ -196,7 +243,6 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
     }
   }, [phase])
 
-  const showOverlay = phase === 'pending' || phase === 'intro'
   const ready = phase === 'done'
 
   return (
@@ -204,7 +250,7 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
       {showOverlay ? (
         <div
           ref={overlayRef}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-950"
+          className="fixed inset-0 z-[100] flex isolate items-center justify-center bg-white dark:bg-zinc-950"
           aria-hidden={phase !== 'intro'}
           role={phase === 'intro' ? 'status' : undefined}
         >
@@ -233,9 +279,9 @@ export function IntroLoader({ children }: { children: React.ReactNode }) {
 
             <span
               ref={markRef}
-              className="relative z-0 inline-flex will-change-transform"
+              className="relative z-0 inline-flex text-zinc-950 will-change-transform dark:text-white"
             >
-              <LogoMark className="h-12 w-auto sm:h-14" fill="white" />
+              <LogoMark className="h-12 w-auto sm:h-14" />
             </span>
 
             <span
